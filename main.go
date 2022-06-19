@@ -52,11 +52,10 @@ func main() {
 	setupEnvironment()
 
 	game := &Game{
-		Width:         windowWidth,
-		Height:        windowHeight,
-		Player:        nil,
-		Throw:         nil,
-		ClickDuration: ClickDuration(0),
+		Width:  windowWidth,
+		Height: windowHeight,
+		Player: nil,
+		Throw:  nil,
 	}
 
 	go NewGame(game)
@@ -104,15 +103,20 @@ func (t *Throw) setPower(s playerStrength) {
 
 func (t *Throw) Update(g *Game) {
 	t.setPower(g.Player.Strength)
-	t.setAccuracy(g.ClickDuration)
+
+	// Do not reset click duration when we have a value
+	if t.Accuracy != 0 && inpututil.MouseButtonPressDuration(ebiten.MouseButtonLeft) == 0 {
+		return
+	}
+
+	t.setAccuracy(ClickDuration(inpututil.MouseButtonPressDuration(ebiten.MouseButtonLeft)))
 }
 
 type Game struct {
-	Width         int
-	Height        int
-	Player        *Player
-	ClickDuration ClickDuration
-	Throw         *Throw
+	Width  int
+	Height int
+	Player *Player
+	Throw  *Throw
 }
 
 func NewGame(game *Game) {
@@ -123,13 +127,6 @@ func NewGame(game *Game) {
 func (g *Game) Update() error {
 	g.Player.Update(g)
 	g.Throw.Update(g)
-
-	// Do not reset click duration when we have a value
-	if g.ClickDuration != 0 && inpututil.MouseButtonPressDuration(ebiten.MouseButtonLeft) == 0 {
-		return nil
-	}
-
-	g.ClickDuration = ClickDuration(inpututil.MouseButtonPressDuration(ebiten.MouseButtonLeft))
 	return nil
 }
 
