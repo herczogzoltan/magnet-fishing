@@ -142,3 +142,7 @@ func (g *Game) Draw(screen *ebiten.Image) {
 func (g *Game) Layout(outsideWidth, outsideHeight int) (windowWidth, windowHeight int) {
 	return g.Width, g.Height
 }
+
+func isClicking() bool {
+	return inpututil.MouseButtonPressDuration(ebiten.MouseButtonLeft) != 0
+}
