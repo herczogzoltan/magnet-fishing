@@ -140,8 +140,6 @@ func (g *Game) Draw(screen *ebiten.Image) {
 	text.Draw(screen, "Throwing Accuracy:"+strconv.Itoa(int(g.Throw.Accuracy)), mplusNormalFont, g.Width-270, 30, color.Black)
 
 	ebitenutil.DebugPrint(screen, fmt.Sprintf("TPS: %0.2f\nFPS: %0.2f", ebiten.CurrentTPS(), ebiten.CurrentFPS()))
-	ebitenutil.DebugPrintAt(screen, fmt.Sprintf("\n\nMouseClick duration: %d", g.ClickDuration), 0, 0)
-	ebitenutil.DebugPrintAt(screen, fmt.Sprintf("\n\n\nThrowAccuracy: %d", g.Throw.Accuracy), 0, 0)
 }
 
 func (g *Game) Layout(outsideWidth, outsideHeight int) (windowWidth, windowHeight int) {
