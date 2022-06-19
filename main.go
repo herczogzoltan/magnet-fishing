@@ -43,9 +43,13 @@ func main() {
 
 type ClickDuration int
 
+type ThrowPower uint8
+
+type ThrowAccuracy uint8
+
 type Throw struct {
-	Accuracy uint8
-	Power    uint8
+	Accuracy ThrowAccuracy
+	Power    ThrowPower
 }
 
 func (t *Throw) setAccuracy(cd ClickDuration) {
@@ -56,7 +60,11 @@ func (t *Throw) setAccuracy(cd ClickDuration) {
 		log.Fatal(err)
 	}
 
-	t.Accuracy = uint8(accuracy)
+	t.Accuracy = ThrowAccuracy(accuracy)
+}
+
+func (t *Throw) Update(g *Game) {
+	t.Power = ThrowPower(g.Player.Strength)
 }
 
 type Game struct {
@@ -74,6 +82,7 @@ func NewGame(game *Game) {
 
 func (g *Game) Update() error {
 	g.Player.Update(g)
+	g.Throw.Update(g)
 
 	// Do not reset click duration when we have a value
 	if g.ClickDuration != 0 && inpututil.MouseButtonPressDuration(ebiten.MouseButtonLeft) == 0 {
