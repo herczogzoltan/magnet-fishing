@@ -5,6 +5,7 @@ import (
 	"image/color"
 	_ "image/png"
 	"log"
+	"strconv"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
@@ -47,6 +48,17 @@ type Throw struct {
 	Power    uint8
 }
 
+func (t *Throw) setAccuracy(cd ClickDuration) {
+	durationString := strconv.Itoa(int(cd))
+	accuracy, err := strconv.Atoi(durationString[len(durationString)-2:])
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	t.Accuracy = uint8(accuracy)
+}
+
 type Game struct {
 	Width         int
 	Height        int
@@ -65,11 +77,11 @@ func (g *Game) Update() error {
 
 	// Do not reset click duration when we have a value
 	if g.ClickDuration != 0 && inpututil.MouseButtonPressDuration(ebiten.MouseButtonLeft) == 0 {
+		g.Throw.setAccuracy(g.ClickDuration)
 		return nil
 	}
 
 	g.ClickDuration = ClickDuration(inpututil.MouseButtonPressDuration(ebiten.MouseButtonLeft))
-
 	return nil
 }
 
@@ -79,6 +91,7 @@ func (g *Game) Draw(screen *ebiten.Image) {
 
 	ebitenutil.DebugPrint(screen, fmt.Sprintf("TPS: %0.2f\nFPS: %0.2f", ebiten.CurrentTPS(), ebiten.CurrentFPS()))
 	ebitenutil.DebugPrintAt(screen, fmt.Sprintf("\n\nMouseClick duration: %d", g.ClickDuration), 0, 0)
+	ebitenutil.DebugPrintAt(screen, fmt.Sprintf("\n\n\nThrowAccuracy: %d", g.Throw.Accuracy), 0, 0)
 }
 
 func (g *Game) Layout(outsideWidth, outsideHeight int) (windowWidth, windowHeight int) {
