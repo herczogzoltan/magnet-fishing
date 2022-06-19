@@ -39,9 +39,7 @@ func main() {
 	}
 }
 
-func NewGame(game *Game) {
-	game.Player = NewPlayer()
-}
+type Duration int
 
 type Game struct {
 	Width    int
@@ -50,7 +48,9 @@ type Game struct {
 	Duration Duration
 }
 
-type Duration int
+func NewGame(game *Game) {
+	game.Player = NewPlayer()
+}
 
 func (g *Game) Update() error {
 	g.Player.Update(g)
