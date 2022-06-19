@@ -26,10 +26,10 @@ func main() {
 	setupEnvironment()
 
 	game := &Game{
-		Width:    windowWidth,
-		Height:   windowHeight,
-		Player:   nil,
-		Duration: Duration(0),
+		Width:         windowWidth,
+		Height:        windowHeight,
+		Player:        nil,
+		ClickDuration: ClickDuration(0),
 	}
 
 	go NewGame(game)
@@ -39,7 +39,7 @@ func main() {
 	}
 }
 
-type Duration int
+type ClickDuration int
 
 type Throw struct {
 	Accuracy uint8
@@ -47,11 +47,11 @@ type Throw struct {
 }
 
 type Game struct {
-	Width    int
-	Height   int
-	Player   *Player
-	Duration Duration
-	Throw    *Throw
+	Width         int
+	Height        int
+	Player        *Player
+	ClickDuration ClickDuration
+	Throw         *Throw
 }
 
 func NewGame(game *Game) {
@@ -60,7 +60,7 @@ func NewGame(game *Game) {
 
 func (g *Game) Update() error {
 	g.Player.Update(g)
-	g.Duration = Duration(inpututil.MouseButtonPressDuration(ebiten.MouseButtonLeft))
+	g.ClickDuration = ClickDuration(inpututil.MouseButtonPressDuration(ebiten.MouseButtonLeft))
 	return nil
 }
 
