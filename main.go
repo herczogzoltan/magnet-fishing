@@ -63,8 +63,12 @@ func (t *Throw) setAccuracy(cd ClickDuration) {
 	t.Accuracy = ThrowAccuracy(accuracy)
 }
 
+func (t *Throw) setPower(s playerStrength) {
+	t.Power = ThrowPower(s)
+}
+
 func (t *Throw) Update(g *Game) {
-	t.Power = ThrowPower(g.Player.Strength)
+	t.setPower(g.Player.Strength)
 }
 
 type Game struct {

@@ -16,10 +16,13 @@ const (
 	playerFrameWidth          = (playerStandAssetWidth / playerFrameNum)
 )
 
+type playerStrength uint8
+
 type Player struct {
-	Image   *ebiten.Image
-	Options *ebiten.DrawImageOptions
-	count   int
+	Image    *ebiten.Image
+	Options  *ebiten.DrawImageOptions
+	Strength playerStrength
+	count    int
 }
 
 func NewPlayer() *Player {
@@ -29,7 +32,8 @@ func NewPlayer() *Player {
 	}
 
 	return &Player{
-		Image: playerImage,
+		Image:    playerImage,
+		Strength: playerStrength(1),
 	}
 }
 
