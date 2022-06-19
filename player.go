@@ -13,7 +13,10 @@ const (
 	playerFrameNum            = 4
 	playerStandAssetWidth     = 448
 	playerStandAssetHeight    = 118
-	playerFrameWidth          = (playerStandAssetWidth / playerFrameNum)
+	playerStandFrameWidth     = (playerStandAssetWidth / playerFrameNum)
+	playerThrowAssetWidth     = 517
+	playerThrowAssetHeight    = 112
+	playerThrowFrameWidth     = playerThrowAssetWidth / playerFrameNum
 )
 
 type playerStrength uint8
@@ -43,9 +46,20 @@ func (p *Player) Draw(screen *ebiten.Image) {
 	p.Options.GeoM.Translate(float64(windowWidth)/2, float64(windowHeight)/2)
 	p.Options.GeoM.Translate(float64(windowWidth/5), 0)
 
-	// Animate standing
-	sx, sy := 0+p.getAnimationSpeed()*playerFrameWidth, 0
-	screen.DrawImage(p.Image.SubImage(image.Rect(sx, sy, sx+playerFrameWidth, sy+playerStandAssetHeight)).(*ebiten.Image), p.Options)
+	// Change Animation to throwing
+	if isClicking() {
+		throwingImage, _, err := ebitenutil.NewImageFromFile("assets/player-throw.png")
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		sx, sy := 0+p.getAnimationSpeed()*playerThrowFrameWidth, 0
+		screen.DrawImage(throwingImage.SubImage(image.Rect(sx, sy, sx+playerThrowFrameWidth, sy+playerThrowAssetHeight)).(*ebiten.Image), p.Options)
+		return
+	}
+
+	sx, sy := 0+p.getAnimationSpeed()*playerStandFrameWidth, 0
+	screen.DrawImage(p.Image.SubImage(image.Rect(sx, sy, sx+playerStandFrameWidth, sy+playerStandAssetHeight)).(*ebiten.Image), p.Options)
 }
 
 func (p *Player) getAnimationSpeed() int {
