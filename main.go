@@ -41,11 +41,17 @@ func main() {
 
 type Duration int
 
+type Throw struct {
+	Accuracy uint8
+	Power    uint8
+}
+
 type Game struct {
 	Width    int
 	Height   int
 	Player   *Player
 	Duration Duration
+	Throw    *Throw
 }
 
 func NewGame(game *Game) {
