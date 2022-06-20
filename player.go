@@ -26,6 +26,8 @@ type Player struct {
 	Options  *ebiten.DrawImageOptions
 	Strength playerStrength
 	count    int
+	Throwing bool
+	Thrown   bool
 }
 
 func NewPlayer() *Player {
@@ -37,6 +39,8 @@ func NewPlayer() *Player {
 	return &Player{
 		Image:    playerImage,
 		Strength: playerStrength(1),
+		Throwing: false,
+		Thrown:   false,
 	}
 }
 
@@ -46,6 +50,38 @@ func (p *Player) Draw(screen *ebiten.Image) {
 	p.Options.GeoM.Translate(float64(windowWidth)/2, float64(windowHeight)/2)
 	p.Options.GeoM.Translate(float64(windowWidth/5), 0)
 
+	if p.Thrown {
+		throwingImage, _, err := ebitenutil.NewImageFromFile("assets/player-throw-release.png")
+		if err != nil {
+			log.Fatal(err)
+		}
+		thrownAssetWidth := 700
+		throwAssetHeight := 144
+		throwFrameWidth := thrownAssetWidth / 5
+
+		sx, sy := 560, 0
+
+		screen.DrawImage(throwingImage.SubImage(image.Rect(sx, sy, sx+throwFrameWidth, sy+throwAssetHeight)).(*ebiten.Image), p.Options)
+		return
+	}
+	if p.Throwing {
+		thrownAssetWidth := 700
+		throwAssetHeight := 144
+		throwFrameWidth := thrownAssetWidth / 5
+		if p.count/playerStandAnimationSpeed%5*throwFrameWidth == 560 {
+			p.Thrown = true
+			return
+		}
+		throwingImage, _, err := ebitenutil.NewImageFromFile("assets/player-throw-release.png")
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		sx, sy := 0+(p.count/playerStandAnimationSpeed)%5*throwFrameWidth, 0
+
+		screen.DrawImage(throwingImage.SubImage(image.Rect(sx, sy, sx+throwFrameWidth, sy+throwAssetHeight)).(*ebiten.Image), p.Options)
+		return
+	}
 	// Change Animation to throwing
 	if isThrowing() {
 		throwingImage, _, err := ebitenutil.NewImageFromFile("assets/player-throw.png")
@@ -67,5 +103,8 @@ func (p *Player) getAnimationSpeed() int {
 }
 
 func (p *Player) Update(g *Game) {
+	if g.isThrown() {
+		p.Throwing = true
+	}
 	p.count++
 }
