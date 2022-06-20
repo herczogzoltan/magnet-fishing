@@ -96,6 +96,6 @@ func (g *Game) Layout(outsideWidth, outsideHeight int) (windowWidth, windowHeigh
 	return g.Width, g.Height
 }
 
-func isClicking() bool {
+func isThrowing() bool {
 	return inpututil.MouseButtonPressDuration(ebiten.MouseButtonLeft) != 0
 }

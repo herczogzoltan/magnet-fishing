@@ -47,7 +47,7 @@ func (p *Player) Draw(screen *ebiten.Image) {
 	p.Options.GeoM.Translate(float64(windowWidth/5), 0)
 
 	// Change Animation to throwing
-	if isClicking() {
+	if isThrowing() {
 		throwingImage, _, err := ebitenutil.NewImageFromFile("assets/player-throw.png")
 		if err != nil {
 			log.Fatal(err)
