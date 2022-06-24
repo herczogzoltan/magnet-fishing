@@ -15,16 +15,19 @@ type Game struct {
 	Height int
 	Player *Player
 	Throw  *Throw
+	Magnet *Magnet
 }
 
 func NewGame(game *Game) {
 	game.Player = NewPlayer()
 	game.Throw = &Throw{}
+	game.Magnet = &Magnet{}
 }
 
 func (g *Game) Update() error {
 	g.Player.Update(g)
 	g.Throw.Update(g)
+	g.Magnet.Update(g)
 
 	if g.Player.ThrownSince == ThrowReleaseCycle {
 		g.reset()
@@ -36,6 +39,7 @@ func (g *Game) Update() error {
 func (g *Game) Draw(screen *ebiten.Image) {
 	screen.Fill(color.White)
 	g.Player.Draw(screen)
+	g.Magnet.Draw(screen)
 
 	text.Draw(screen, "Throwing Accuracy:"+strconv.Itoa(int(g.Throw.Accuracy)), mplusNormalFont, g.Width-270, 30, color.Black)
 
@@ -53,4 +57,5 @@ func (g *Game) isThrown() bool {
 func (g *Game) reset() {
 	g.Player.reset()
 	g.Throw.reset()
+	g.Magnet.reset()
 }
