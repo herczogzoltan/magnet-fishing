@@ -4,6 +4,7 @@ import (
 	"image"
 	"log"
 
+	"github.com/hajimehoshi/ebiten/inpututil"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 )
@@ -70,25 +71,25 @@ func (p *Player) Draw(screen *ebiten.Image) {
 			p.Thrown = true
 			return
 		}
-		preparingImage, _, err := ebitenutil.NewImageFromFile("assets/player-throw-release.png")
+		thrownImage, _, err := ebitenutil.NewImageFromFile("assets/player-throw-release.png")
 		if err != nil {
 			log.Fatal(err)
 		}
 
 		sx, sy := 0+(p.count/playerStandAnimationSpeed)%5*playerThrownFrameWidth, 0
 
-		screen.DrawImage(preparingImage.SubImage(image.Rect(sx, sy, sx+playerThrownFrameWidth, sy+playerThrownAssetHeight)).(*ebiten.Image), p.Options)
+		screen.DrawImage(thrownImage.SubImage(image.Rect(sx, sy, sx+playerThrownFrameWidth, sy+playerThrownAssetHeight)).(*ebiten.Image), p.Options)
 		return
 	}
 	// Change Animation to throwing
 	if isPrepareThrow() {
-		throwingImage, _, err := ebitenutil.NewImageFromFile("assets/player-throw.png")
+		preparingImage, _, err := ebitenutil.NewImageFromFile("assets/player-throw.png")
 		if err != nil {
 			log.Fatal(err)
 		}
 
 		sx, sy := 0+p.getAnimationSpeed()*playerPreparingFrameWidth, 0
-		screen.DrawImage(throwingImage.SubImage(image.Rect(sx, sy, sx+playerPreparingFrameWidth, sy+playerPreparingAssetHeight)).(*ebiten.Image), p.Options)
+		screen.DrawImage(preparingImage.SubImage(image.Rect(sx, sy, sx+playerPreparingFrameWidth, sy+playerPreparingAssetHeight)).(*ebiten.Image), p.Options)
 		return
 	}
 
@@ -103,6 +104,10 @@ func (p *Player) getAnimationSpeed() int {
 func (p *Player) Update(g *Game) {
 	if g.isThrown() {
 		p.Throwing = true
+	}
+
+	if inpututil.IsMouseButtonJustReleased(ebiten.MouseButtonLeft) {
+		p.count = 0
 	}
 
 	p.count++
