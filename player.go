@@ -9,6 +9,10 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 )
 
+var (
+	ThrowReleaseCycle = 50
+)
+
 const (
 	playerStandAnimationSpeed  = 14
 	playerFrameNum             = 4
@@ -27,12 +31,13 @@ const (
 type playerStrength uint8
 
 type Player struct {
-	Image    *ebiten.Image
-	Options  *ebiten.DrawImageOptions
-	Strength playerStrength
-	count    int
-	Throwing bool
-	Thrown   bool
+	Image       *ebiten.Image
+	Options     *ebiten.DrawImageOptions
+	Strength    playerStrength
+	count       int
+	Throwing    bool
+	Thrown      bool
+	ThrownSince int
 }
 
 func NewPlayer() *Player {
@@ -56,6 +61,7 @@ func (p *Player) Draw(screen *ebiten.Image) {
 	p.Options.GeoM.Translate(float64(windowWidth/5), 0)
 
 	if p.Thrown {
+
 		throwingImage, _, err := ebitenutil.NewImageFromFile("assets/player-throw-release.png")
 		if err != nil {
 			log.Fatal(err)
@@ -64,6 +70,7 @@ func (p *Player) Draw(screen *ebiten.Image) {
 		sx, sy := 560, 0
 
 		screen.DrawImage(throwingImage.SubImage(image.Rect(sx, sy, sx+playerThrownFrameWidth, sy+playerThrownAssetHeight)).(*ebiten.Image), p.Options)
+		p.ThrownSince++
 		return
 	}
 	if p.Throwing {
@@ -111,4 +118,11 @@ func (p *Player) Update(g *Game) {
 	}
 
 	p.count++
+}
+
+func (p *Player) reset() {
+	p.count = 0
+	p.Throwing = false
+	p.Thrown = false
+	p.ThrownSince = 0
 }

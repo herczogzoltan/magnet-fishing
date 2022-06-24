@@ -25,6 +25,11 @@ func NewGame(game *Game) {
 func (g *Game) Update() error {
 	g.Player.Update(g)
 	g.Throw.Update(g)
+
+	if g.Player.ThrownSince == ThrowReleaseCycle {
+		g.reset()
+	}
+
 	return nil
 }
 
@@ -43,4 +48,9 @@ func (g *Game) Layout(outsideWidth, outsideHeight int) (windowWidth, windowHeigh
 
 func (g *Game) isThrown() bool {
 	return !isPrepareThrow() && g.Throw.Accuracy != 0
+}
+
+func (g *Game) reset() {
+	g.Player.reset()
+	g.Throw.reset()
 }

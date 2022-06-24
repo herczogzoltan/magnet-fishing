@@ -52,3 +52,8 @@ func (t *Throw) Update(g *Game) {
 
 	t.setAccuracy(ClickDuration(inpututil.MouseButtonPressDuration(ebiten.MouseButtonLeft)))
 }
+
+func (t *Throw) reset() {
+	t.Accuracy = 0
+	t.Power = 0
+}
