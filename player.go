@@ -10,7 +10,7 @@ import (
 )
 
 var (
-	ThrowReleaseCycle = 50
+	ThrowReleaseCycle = 100
 )
 
 const (
