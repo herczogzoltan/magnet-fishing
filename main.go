@@ -97,9 +97,9 @@ func (g *Game) Layout(outsideWidth, outsideHeight int) (windowWidth, windowHeigh
 }
 
 func (g *Game) isThrown() bool {
-	return !isThrowing() && g.Throw.Accuracy != 0
+	return !isPrepareThrow() && g.Throw.Accuracy != 0
 }
 
-func isThrowing() bool {
+func isPrepareThrow() bool {
 	return inpututil.MouseButtonPressDuration(ebiten.MouseButtonLeft) != 0
 }
