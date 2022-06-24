@@ -4,9 +4,9 @@ import (
 	"image"
 	"log"
 
-	"github.com/hajimehoshi/ebiten/inpututil"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
+	"github.com/hajimehoshi/ebiten/v2/inpututil"
 )
 
 const (
@@ -83,7 +83,7 @@ func (p *Player) Draw(screen *ebiten.Image) {
 	}
 	// Change Animation to throwing
 	if isPrepareThrow() {
-		preparingImage, _, err := ebitenutil.NewImageFromFile("assets/player-throw.png")
+		preparingImage, _, err := ebitenutil.NewImageFromFile("assets/player-prepare-throw.png")
 		if err != nil {
 			log.Fatal(err)
 		}
