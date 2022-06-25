@@ -44,10 +44,7 @@ func (m *Magnet) Draw(screen *ebiten.Image) {
 		w, h := m.Image.Size()
 		op.GeoM.Translate(-float64(w)/2.0, -float64(h)/2.0)
 
-		cameraX := 10
-		cameraY := 10
-
-		op.GeoM.Translate(float64(m.x16/20.0)-float64(cameraX), float64(m.y16/20.0)-float64(cameraY))
+		op.GeoM.Translate(float64(m.x16/20.0), float64(m.y16/20.0))
 
 		screen.DrawImage(m.Image, op)
 		return
