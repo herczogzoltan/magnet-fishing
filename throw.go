@@ -11,10 +11,12 @@ import (
 type ThrowPower uint8
 type ThrowAccuracy uint8
 type ClickDuration int
+type Distance int
 
 type Throw struct {
 	Accuracy ThrowAccuracy
 	Power    ThrowPower
+	Distance Distance
 }
 
 func (t *Throw) setAccuracy(cd ClickDuration) {
@@ -26,6 +28,10 @@ func (t *Throw) setAccuracy(cd ClickDuration) {
 	}
 
 	t.Accuracy = ThrowAccuracy(accuracy)
+}
+
+func (t *Throw) getAccuracy() ThrowAccuracy {
+	return t.Accuracy
 }
 
 func (t *Throw) calculateAccuracy(duration string) (int, error) {
@@ -51,6 +57,11 @@ func (t *Throw) Update(g *Game) {
 	}
 
 	t.setAccuracy(ClickDuration(inpututil.MouseButtonPressDuration(ebiten.MouseButtonLeft)))
+	t.calculateDistance()
+}
+
+func (t *Throw) calculateDistance() {
+	t.Distance = Distance(t.Accuracy + ThrowAccuracy(t.Power))
 }
 
 func (t *Throw) reset() {

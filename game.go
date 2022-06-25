@@ -21,7 +21,7 @@ type Game struct {
 func NewGame(game *Game) {
 	game.Player = NewPlayer()
 	game.Throw = &Throw{}
-	game.Magnet = &Magnet{}
+	game.Magnet = NewMagnet()
 }
 
 func (g *Game) Update() error {
@@ -29,7 +29,7 @@ func (g *Game) Update() error {
 	g.Throw.Update(g)
 	g.Magnet.Update(g)
 
-	if g.Player.ThrownSince == ThrowReleaseCycle {
+	if g.Magnet.Found {
 		g.reset()
 	}
 

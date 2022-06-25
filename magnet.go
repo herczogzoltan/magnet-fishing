@@ -17,25 +17,39 @@ type Magnet struct {
 	vy16        int
 }
 
+func NewMagnet() *Magnet {
+	magnetImage, _, err := ebitenutil.NewImageFromFile("assets/magnet.png")
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return &Magnet{
+		Image:       magnetImage,
+		Thrown:      false,
+		ThrownSince: 0,
+		Found:       false,
+		y16:         0,
+		x16:         0,
+		vy16:        65,
+	}
+}
+
 func (m *Magnet) Draw(screen *ebiten.Image) {
 	if m.Thrown {
-		magnetImage, _, err := ebitenutil.NewImageFromFile("assets/magnet.png")
-		if err != nil {
-			log.Fatal(err)
-		}
-
 		op := &ebiten.DrawImageOptions{}
 		op.GeoM.Translate(float64(windowWidth)/2, float64(windowHeight)/2)
 		op.GeoM.Translate(float64(windowWidth)/5, 0)
-		w, h := magnetImage.Size()
+
+		w, h := m.Image.Size()
 		op.GeoM.Translate(-float64(w)/2.0, -float64(h)/2.0)
 
 		cameraX := 10
 		cameraY := 10
 
-		op.GeoM.Translate(float64(m.x16/50.0)-float64(cameraX), float64(m.y16/50.0)-float64(cameraY))
+		op.GeoM.Translate(float64(m.x16/20.0)-float64(cameraX), float64(m.y16/20.0)-float64(cameraY))
 
-		screen.DrawImage(magnetImage, op)
+		screen.DrawImage(m.Image, op)
 		return
 	}
 
@@ -48,11 +62,12 @@ func (m *Magnet) Update(g *Game) {
 
 	if m.Thrown {
 		m.ThrownSince++
-		if m.ThrownSince == ThrowReleaseCycle {
+		if m.ThrownSince != 0 && m.y16 >= 4000 {
+			m.y16 = 0
 			m.Found = true
 		}
 
-		if m.ThrownSince <= ThrowReleaseCycle/2 {
+		if m.ThrownSince <= 100/2 {
 			m.y16 -= m.vy16
 			m.x16 -= m.vy16
 		} else {
