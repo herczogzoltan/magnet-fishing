@@ -15,6 +15,7 @@ type Magnet struct {
 	ThrownSince   int
 	ThrowDistance Distance
 	Found         bool
+	Catch         Catch
 }
 
 func NewMagnet() *Magnet {
@@ -83,6 +84,7 @@ func (m *Magnet) Update(g *Game) {
 	}
 
 	if m.Found {
+
 		m.Thrown = false
 	}
 }
@@ -100,6 +102,7 @@ func (m *Magnet) reset() {
 	m.Found = false
 	m.ThrownSince = 0
 	m.ThrowDistance = 0
+
 	// Setup starting coordinates
 	op := &ebiten.DrawImageOptions{}
 	op.GeoM.Translate(float64(windowWidth)/2, float64(windowHeight)/2)

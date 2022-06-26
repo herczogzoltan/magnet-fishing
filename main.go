@@ -46,6 +46,8 @@ func init() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	loadCatchAsset()
 }
 
 func setupEnvironment() {

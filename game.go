@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"image/color"
+	"math/rand"
 	"strconv"
 
 	"github.com/hajimehoshi/ebiten/v2"
@@ -22,6 +23,7 @@ type Game struct {
 	Throw  *Throw
 	Magnet *Magnet
 	Found  bool
+	Catch  Catch
 }
 
 func NewGame(game *Game) {
@@ -29,6 +31,7 @@ func NewGame(game *Game) {
 	game.Throw = &Throw{}
 	game.Magnet = NewMagnet()
 	game.Found = false
+	game.Catch = Catch{}
 }
 
 func (g *Game) Update() error {
@@ -38,6 +41,8 @@ func (g *Game) Update() error {
 
 	if g.Magnet.Found {
 		g.Found = true
+		g.Catch = catchList.Catches[rand.Intn(len(catchList.Catches))]
+
 		g.reset()
 	}
 
@@ -52,12 +57,13 @@ func (g *Game) Draw(screen *ebiten.Image) {
 	text.Draw(screen, "Throwing Accuracy:"+strconv.Itoa(int(g.Throw.Accuracy)), mplusNormalFont, g.Width-270, 30, color.Black)
 
 	if g.Found {
-		text.Draw(screen, "You found something!", mplusNormalFont, g.Width/2, g.Height/3, color.Black)
+		text.Draw(screen, fmt.Sprintf("You found %s !", g.Catch.Name), mplusNormalFont, g.Width/2, g.Height/3, color.Black)
 
-		text.Draw(screen, "It's a nice pen! I wonder how did it end up there?", mplusSmallFont, g.Width/2, g.Height/3+30, color.Black)
+		text.Draw(screen, g.Catch.Description, mplusSmallFont, g.Width/2, g.Height/3+30, color.Black)
 
 		if inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft) {
 			g.Found = false
+			g.Catch = Catch{}
 		}
 
 	}

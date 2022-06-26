@@ -1,0 +1,12 @@
+{
+    "catches": [
+        {
+            "Name": "a nice Pen",
+            "Description": "It's a nice pen! I wonder how did it end up there?"
+        },
+        {
+            "Name": "a rusty Coin",
+            "Description": "Should I keep continue fishin' ?\n Heads or tails.... oh both sides are blank."
+        }
+    ]
+}
