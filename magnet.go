@@ -41,14 +41,20 @@ func NewMagnet() *Magnet {
 
 func (m *Magnet) Draw(screen *ebiten.Image) {
 
-	ty := m.calculateY() + 5
 	if m.Thrown {
+		diff := float64(m.ThrowDistance / 5)
+		if diff >= 4 {
+			diff = 4
+		}
+		ty := m.calculateY() + diff/5
+		tx := 2 + diff
+
 		if m.ThrownSince >= int(m.ThrowDistance*130) {
-			m.Options.GeoM.Translate(-float64(2), +ty*float64((m.ThrownSince/15)))
+			m.Options.GeoM.Translate(-float64(tx), +ty*float64((m.ThrownSince/10)))
 		} else if m.ThrownSince >= int(m.ThrowDistance*100) && m.ThrownSince <= int(m.ThrowDistance*130) {
-			m.Options.GeoM.Translate(-float64(2), 0)
+			m.Options.GeoM.Translate(-float64(tx), 0)
 		} else {
-			m.Options.GeoM.Translate(-float64(2), -ty+float64(m.ThrownSince/10))
+			m.Options.GeoM.Translate(-float64(tx), -ty+float64(m.ThrownSince/4))
 		}
 
 		screen.DrawImage(m.Image, m.Options)
@@ -71,7 +77,7 @@ func (m *Magnet) Update(g *Game) {
 		m.ThrownSince++
 
 		// Found when hit ocean floor
-		if m.ThrownSince != 0 && m.Options.GeoM.Element(1, 2) >= OceanFloor {
+		if m.Options.GeoM.Element(1, 2) >= OceanFloor {
 			m.Found = true
 		}
 	}

@@ -27,7 +27,12 @@ func (t *Throw) setAccuracy(cd ClickDuration) {
 		log.Fatal(err)
 	}
 
-	t.Accuracy = ThrowAccuracy(accuracy)
+	if accuracy <= 50 {
+		t.Accuracy = ThrowAccuracy(accuracy)
+		return
+	}
+
+	t.Accuracy = ThrowAccuracy(100 - accuracy)
 }
 
 func (t *Throw) getAccuracy() ThrowAccuracy {
@@ -53,18 +58,19 @@ func (t *Throw) Update(g *Game) {
 
 	// Do not reset click duration when we have a value
 	if t.Accuracy != 0 && inpututil.MouseButtonPressDuration(ebiten.MouseButtonLeft) == 0 {
+		t.calculateDistance()
 		return
 	}
 
 	t.setAccuracy(ClickDuration(inpututil.MouseButtonPressDuration(ebiten.MouseButtonLeft)))
-	t.calculateDistance()
 }
 
 func (t *Throw) calculateDistance() {
-	t.Distance = Distance(t.Accuracy+ThrowAccuracy(t.Power)) * 2
+	t.Distance = Distance(t.Accuracy + ThrowAccuracy(t.Power))
 }
 
 func (t *Throw) reset() {
 	t.Accuracy = 0
 	t.Power = 0
+	t.Distance = 0
 }
