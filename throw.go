@@ -61,7 +61,7 @@ func (t *Throw) Update(g *Game) {
 }
 
 func (t *Throw) calculateDistance() {
-	t.Distance = Distance(t.Accuracy + ThrowAccuracy(t.Power))
+	t.Distance = Distance(t.Accuracy+ThrowAccuracy(t.Power)) * 2
 }
 
 func (t *Throw) reset() {

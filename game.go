@@ -10,6 +10,10 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/text"
 )
 
+const (
+	OceanFloor = 800
+)
+
 type Game struct {
 	Width  int
 	Height int

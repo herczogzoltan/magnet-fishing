@@ -2,19 +2,19 @@ package main
 
 import (
 	"log"
+	"math"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 )
 
 type Magnet struct {
-	Image       *ebiten.Image
-	Options     *ebiten.DrawImageOptions
-	Thrown      bool
-	ThrownSince int
-	Found       bool
-	y16, x16    int
-	vy16        int
+	Image         *ebiten.Image
+	Options       *ebiten.DrawImageOptions
+	Thrown        bool
+	ThrownSince   int
+	ThrowDistance Distance
+	Found         bool
 }
 
 func NewMagnet() *Magnet {
@@ -24,29 +24,34 @@ func NewMagnet() *Magnet {
 		log.Fatal(err)
 	}
 
+	op := &ebiten.DrawImageOptions{}
+	// Setup starting coordinates
+	op.GeoM.Translate(float64(windowWidth)/2, float64(windowHeight)/2)
+	op.GeoM.Translate(float64(windowWidth)/5, 0)
+
 	return &Magnet{
-		Image:       magnetImage,
-		Thrown:      false,
-		ThrownSince: 0,
-		Found:       false,
-		y16:         0,
-		x16:         0,
-		vy16:        65,
+		Image:         magnetImage,
+		Options:       op,
+		Thrown:        false,
+		ThrownSince:   0,
+		ThrowDistance: 0,
+		Found:         false,
 	}
 }
 
 func (m *Magnet) Draw(screen *ebiten.Image) {
+
+	ty := m.calculateY() + 5
 	if m.Thrown {
-		op := &ebiten.DrawImageOptions{}
-		op.GeoM.Translate(float64(windowWidth)/2, float64(windowHeight)/2)
-		op.GeoM.Translate(float64(windowWidth)/5, 0)
+		if m.ThrownSince >= int(m.ThrowDistance*130) {
+			m.Options.GeoM.Translate(-float64(2), +ty*float64((m.ThrownSince/15)))
+		} else if m.ThrownSince >= int(m.ThrowDistance*100) && m.ThrownSince <= int(m.ThrowDistance*130) {
+			m.Options.GeoM.Translate(-float64(2), 0)
+		} else {
+			m.Options.GeoM.Translate(-float64(2), -ty+float64(m.ThrownSince/10))
+		}
 
-		w, h := m.Image.Size()
-		op.GeoM.Translate(-float64(w)/2.0, -float64(h)/2.0)
-
-		op.GeoM.Translate(float64(m.x16/20.0), float64(m.y16/20.0))
-
-		screen.DrawImage(m.Image, op)
+		screen.DrawImage(m.Image, m.Options)
 		return
 	}
 
@@ -57,38 +62,41 @@ func (m *Magnet) Update(g *Game) {
 		m.Thrown = true
 	}
 
+	// do not override it while throwing
+	if m.ThrowDistance == Distance(0) && g.Throw.Distance != Distance(0) {
+		m.ThrowDistance = g.Throw.Distance
+	}
+
 	if m.Thrown {
 		m.ThrownSince++
-		if m.ThrownSince != 0 && m.y16 >= 4000 {
-			m.y16 = 0
+
+		// Found when hit ocean floor
+		if m.ThrownSince != 0 && m.Options.GeoM.Element(1, 2) >= OceanFloor {
 			m.Found = true
-		}
-
-		if m.ThrownSince <= 100/2 {
-			m.y16 -= m.vy16
-			m.x16 -= m.vy16
-		} else {
-			m.y16 += m.vy16
-			m.x16 -= m.vy16
-		}
-
-		// Gravity
-		m.vy16 += 3
-		if m.vy16 > 60 {
-			m.vy16 = 60
 		}
 	}
 
 	if m.Found {
 		m.Thrown = false
 	}
+}
 
+func (m *Magnet) calculateY() float64 {
+	x := m.Options.GeoM.Element(0, 2)
+	diameter := int(m.ThrowDistance)
+	radius := float64(diameter / 2)
+	h := x - radius
+
+	return radius + math.Sqrt(math.Pow(radius, 2)-math.Pow(x-h, 2))
 }
 
 func (m *Magnet) reset() {
 	m.Found = false
 	m.ThrownSince = 0
-	m.y16 = 0
-	m.x16 = 0
-	m.vy16 = 0
+	m.ThrowDistance = 0
+	// Setup starting coordinates
+	op := &ebiten.DrawImageOptions{}
+	op.GeoM.Translate(float64(windowWidth)/2, float64(windowHeight)/2)
+	op.GeoM.Translate(float64(windowWidth)/5, 0)
+	m.Options = op
 }
