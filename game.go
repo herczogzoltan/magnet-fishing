@@ -26,6 +26,7 @@ type Game struct {
 }
 
 func NewGame(game *Game) {
+	textFloat = 36
 	game.Player = NewPlayer()
 	game.Throw = &Throw{}
 	game.Magnet = NewMagnet()
@@ -48,6 +49,8 @@ func (g *Game) Update() error {
 	return nil
 }
 
+var textFloat int
+
 func (g *Game) Draw(screen *ebiten.Image) {
 	screen.Fill(color.White)
 	g.Player.Draw(screen)
@@ -57,15 +60,19 @@ func (g *Game) Draw(screen *ebiten.Image) {
 	text.Draw(screen, "Throwing Accuracy:"+strconv.Itoa(int(g.Throw.Accuracy)), mplusNormalFont, g.Width-270, 60, color.Black)
 
 	if g.Found {
-		text.Draw(screen, fmt.Sprintf("You found %s !", g.Catch.Name), mplusNormalFont, g.Width/2, g.Height/3, color.Black)
+		text.Draw(screen, fmt.Sprintf("+%d Gold!", g.Catch.Gold), mplusBigFont, g.Width/2, g.Height/3-(66-textFloat), color.Black)
+		text.Draw(screen, fmt.Sprintf("You found %s !", g.Catch.Name), mplusNormalFont, g.Width/2, g.Height/3-(36-textFloat), color.Black)
 
-		text.Draw(screen, g.Catch.Description, mplusSmallFont, g.Width/2, g.Height/3+30, color.Black)
+		text.Draw(screen, g.Catch.Description, mplusSmallFont, g.Width/2, g.Height/3-(6-textFloat), color.Black)
 
 		if inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft) {
+			g.Player.Gold += g.Catch.Gold
 			g.Found = false
 			g.Catch = Catch{}
 		}
-
+		if textFloat != 0 {
+			textFloat -= 1
+		}
 	}
 }
 
@@ -81,4 +88,5 @@ func (g *Game) reset() {
 	g.Player.reset()
 	g.Throw.reset()
 	g.Magnet.reset()
+	textFloat = 36
 }
