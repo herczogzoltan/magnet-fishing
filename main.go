@@ -18,6 +18,7 @@ const (
 
 var (
 	mplusNormalFont font.Face
+	mplusSmallFont  font.Face
 )
 
 func init() {
@@ -32,6 +33,16 @@ func init() {
 		DPI:     dpi,
 		Hinting: font.HintingFull,
 	})
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	mplusSmallFont, err = opentype.NewFace(tt, &opentype.FaceOptions{
+		Size:    20,
+		DPI:     dpi,
+		Hinting: font.HintingFull,
+	})
+
 	if err != nil {
 		log.Fatal(err)
 	}
