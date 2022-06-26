@@ -1,12 +1,32 @@
 {
     "catches": [
         {
-            "Name": "a nice Pen",
-            "Description": "It's a nice pen! I wonder how did it end up there?"
+            "Name": "a Nice Pen",
+            "Description": "It's a nice pen! Finally I can start my diary!\nIf I catch one..."
         },
         {
-            "Name": "a rusty Coin",
-            "Description": "Should I keep continue fishin' ?\n Heads or tails.... oh both sides are blank."
+            "Name": "a Rusty Coin",
+            "Description": "Should I keep continue fishin' ?\nHeads or tails.... oh both sides are blank."
+        },
+        {
+            "Name": "a few Rusty Nails",
+            "Description": "Well, I'm happy it's not in the water anymore!"
+        },
+        {
+            "Name": "a Fishing Hook",
+            "Description": "It's better than stepping into it!"
+        },
+        {
+            "Name": "an Old Box",
+            "Description": "I wonder what's inside of it? \nMaybe photos of a loved one or notes and plans...\nI'll open it at home!"
+        },
+        {
+            "Name": "an Antique Pen",
+            "Description": "This looks like a really old one! How long could it be there? Who could lost it?"
+        },
+        {
+            "Name": "a Straightened Questionmark",
+            "Description": "Darn! This is useless now!"
         }
     ]
 }
