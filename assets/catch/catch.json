@@ -2,31 +2,38 @@
     "catches": [
         {
             "Name": "a Nice Pen",
-            "Description": "It's a nice pen! Finally I can start my diary!\nIf I catch one..."
+            "Description": "It's a nice pen! Finally I can start my diary!\nIf I catch one...",
+            "Gold": 30
         },
         {
             "Name": "a Rusty Coin",
-            "Description": "Should I keep continue fishin' ?\nHeads or tails.... oh both sides are blank."
+            "Description": "Should I keep continue fishin' ?\nHeads or tails.... oh both sides are blank.",
+            "Gold": 10
         },
         {
             "Name": "a few Rusty Nails",
-            "Description": "Well, I'm happy it's not in the water anymore!"
+            "Description": "Well, I'm happy it's not in the water anymore!",
+            "Gold": 10
         },
         {
             "Name": "a Fishing Hook",
-            "Description": "It's better than stepping into it!"
+            "Description": "It's better than stepping into it!",
+            "Gold": 10
         },
         {
             "Name": "an Old Box",
-            "Description": "I wonder what's inside of it? \nMaybe photos of a loved one or notes and plans...\nI'll open it at home!"
+            "Description": "I wonder what's inside of it? \nMaybe photos of a loved one or notes and plans...\nI'll open it at home!",
+            "Gold": 250
         },
         {
             "Name": "an Antique Pen",
-            "Description": "This looks like a really old one!\nHow long could it be there? Who could lost it?"
+            "Description": "This looks like a really old one!\nHow long could it be there? Who could lost it?",
+            "Gold": 50
         },
         {
             "Name": "a Straightened Questionmark",
-            "Description": "Darn! This is useless now!"
+            "Description": "Darn! This is useless now!",
+            "Gold": 3
         }
     ]
 }

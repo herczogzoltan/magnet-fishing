@@ -13,6 +13,7 @@ var (
 type Catch struct {
 	Name        string `json:"Name"`
 	Description string `json:"Description"`
+	Gold        Gold   `json:"Gold"`
 }
 
 type Catches struct {
