@@ -15,7 +15,6 @@ type Magnet struct {
 	ThrownSince   int
 	ThrowDistance Distance
 	Found         bool
-	Catch         Catch
 }
 
 func NewMagnet() *Magnet {
