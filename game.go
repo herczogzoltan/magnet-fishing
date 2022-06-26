@@ -53,7 +53,8 @@ func (g *Game) Draw(screen *ebiten.Image) {
 	g.Player.Draw(screen)
 	g.Magnet.Draw(screen)
 
-	text.Draw(screen, "Throwing Accuracy:"+strconv.Itoa(int(g.Throw.Accuracy)), mplusNormalFont, g.Width-270, 30, color.Black)
+	text.Draw(screen, "Gold:"+strconv.Itoa(int(g.Player.Gold)), mplusNormalFont, g.Width-270, 30, color.Black)
+	text.Draw(screen, "Throwing Accuracy:"+strconv.Itoa(int(g.Throw.Accuracy)), mplusNormalFont, g.Width-270, 60, color.Black)
 
 	if g.Found {
 		text.Draw(screen, fmt.Sprintf("You found %s !", g.Catch.Name), mplusNormalFont, g.Width/2, g.Height/3, color.Black)

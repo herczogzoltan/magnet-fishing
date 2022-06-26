@@ -30,9 +30,12 @@ const (
 
 type playerStrength uint8
 
+type Gold uint64
+
 type Player struct {
 	Image       *ebiten.Image
 	Options     *ebiten.DrawImageOptions
+	Gold        Gold
 	Strength    playerStrength
 	count       int
 	Throwing    bool
@@ -49,6 +52,7 @@ func NewPlayer() *Player {
 	return &Player{
 		Image:    playerImage,
 		Strength: playerStrength(1),
+		Gold:     Gold(0),
 		Throwing: false,
 		Thrown:   false,
 	}
