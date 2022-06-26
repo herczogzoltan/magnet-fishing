@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"image/color"
 	"strconv"
-	"time"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
@@ -17,13 +16,12 @@ const (
 )
 
 type Game struct {
-	Width                  int
-	Height                 int
-	Player                 *Player
-	Throw                  *Throw
-	Magnet                 *Magnet
-	Found                  bool
-	FoundTextTimerFinished bool
+	Width  int
+	Height int
+	Player *Player
+	Throw  *Throw
+	Magnet *Magnet
+	Found  bool
 }
 
 func NewGame(game *Game) {
@@ -31,7 +29,6 @@ func NewGame(game *Game) {
 	game.Throw = &Throw{}
 	game.Magnet = NewMagnet()
 	game.Found = false
-	game.FoundTextTimerFinished = false
 }
 
 func (g *Game) Update() error {
@@ -59,8 +56,7 @@ func (g *Game) Draw(screen *ebiten.Image) {
 
 		text.Draw(screen, "It's a nice pen! I wonder how did it end up there?", mplusSmallFont, g.Width/2, g.Height/3+30, color.Black)
 
-		go func() { g.timer(5 * time.Second) }()
-		if inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft) || g.FoundTextTimerFinished {
+		if inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft) {
 			g.Found = false
 		}
 
@@ -76,14 +72,8 @@ func (g *Game) isThrown() bool {
 	return !isPrepareThrow() && g.Throw.Accuracy != 0
 }
 
-func (g *Game) timer(s time.Duration) {
-	time.Sleep(s)
-	g.FoundTextTimerFinished = true
-}
-
 func (g *Game) reset() {
 	g.Player.reset()
 	g.Throw.reset()
 	g.Magnet.reset()
-	g.FoundTextTimerFinished = false
 }
