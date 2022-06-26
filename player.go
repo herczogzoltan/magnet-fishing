@@ -19,8 +19,8 @@ const (
 	playerStandAssetWidth      = 448
 	playerStandAssetHeight     = 118
 	playerStandFrameWidth      = (playerStandAssetWidth / playerFrameNum)
-	playerPreparingAssetWidth  = 517
-	playerPreparingAssetHeight = 112
+	playerPreparingAssetWidth  = 539
+	playerPreparingAssetHeight = 121
 	playerPreparingFrameWidth  = playerPreparingAssetWidth / playerFrameNum
 	playerThrownAssetWidth     = 700
 	playerThrownAssetHeight    = 144
