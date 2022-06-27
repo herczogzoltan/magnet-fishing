@@ -74,7 +74,7 @@ func (g *Game) Draw(screen *ebiten.Image) {
 
 	if g.Found {
 		text.Draw(screen, fmt.Sprintf("+%d Gold!", g.Catch.Gold), mplusBigFont, g.Width/2, g.Height/3-(66-textFloat), color.Black)
-		text.Draw(screen, fmt.Sprintf("You found %s !", g.Catch.Name), mplusNormalFont, g.Width/2, g.Height/3-(36-textFloat), color.Black)
+		text.Draw(screen, fmt.Sprintf("I found %s !", g.Catch.Name), mplusNormalFont, g.Width/2, g.Height/3-(36-textFloat), color.Black)
 
 		text.Draw(screen, g.Catch.Description, mplusSmallFont, g.Width/2, g.Height/3-(6-textFloat), color.Black)
 
