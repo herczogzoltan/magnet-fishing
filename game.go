@@ -18,6 +18,7 @@ const (
 type Game struct {
 	Width       int
 	Height      int
+	Store       *Store
 	Player      *Player
 	Throw       *Throw
 	Magnet      *Magnet
@@ -28,6 +29,7 @@ type Game struct {
 
 func NewGame(game *Game) {
 	textFloat = 36
+	game.Store = &Store{}
 	game.Player = NewPlayer()
 	game.Throw = &Throw{}
 	game.Magnet = NewMagnet()
@@ -40,6 +42,7 @@ func (g *Game) Update() error {
 	g.Player.Update(g)
 	g.Throw.Update(g)
 	g.Magnet.Update(g)
+	g.Store.Listen(g.Player)
 
 	if isPrepareThrow() {
 		g.GameStarted = true
