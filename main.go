@@ -97,6 +97,9 @@ func loadImage(name string) *ebiten.Image {
 	if err != nil {
 		panic(err)
 	}
+
+	defer file.Close()
+
 	image, _, err := ebitenutil.NewImageFromReader(file)
 
 	if err != nil {
