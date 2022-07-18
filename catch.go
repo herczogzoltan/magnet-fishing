@@ -1,13 +1,14 @@
 package main
 
 import (
+	_ "embed"
 	"encoding/json"
-	"io/ioutil"
-	"os"
 )
 
 var (
 	catchList Catches
+	//go:embed assets/catch/catch.json
+	catches []byte
 )
 
 type Catch struct {
@@ -21,15 +22,7 @@ type Catches struct {
 }
 
 func loadCatchAsset() {
-	jsonFile, err := os.Open("assets/catch/catch.json")
-	if err != nil {
-		panic(err)
-	}
-
-	defer jsonFile.Close()
-	catches, _ := ioutil.ReadAll(jsonFile)
-	err = json.Unmarshal(catches, &catchList)
-	if err != nil {
+	if err := json.Unmarshal(catches, &catchList); err != nil {
 		panic(err)
 	}
 }
