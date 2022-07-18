@@ -18,7 +18,12 @@ type Magnet struct {
 }
 
 func NewMagnet() *Magnet {
-	magnetImage, _, err := ebitenutil.NewImageFromFile("assets/magnet.png")
+	magnetFile, err := assets.Open("assets/magnet.png")
+
+	if err != nil {
+		panic(err)
+	}
+	magnetImage, _, err := ebitenutil.NewImageFromReader(magnetFile)
 
 	if err != nil {
 		log.Fatal(err)

@@ -44,7 +44,12 @@ type Player struct {
 }
 
 func NewPlayer() *Player {
-	playerImage, _, err := ebitenutil.NewImageFromFile("assets/player-stand.png")
+	playerFile, err := assets.Open("assets/player-stand.png")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	playerImage, _, err := ebitenutil.NewImageFromReader(playerFile)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -65,8 +70,13 @@ func (p *Player) Draw(screen *ebiten.Image) {
 	p.Options.GeoM.Translate(float64(windowWidth/5), 0)
 
 	if p.Thrown {
+		throwReleaseImage, err := assets.Open("assets/player-throw-release.png")
 
-		throwingImage, _, err := ebitenutil.NewImageFromFile("assets/player-throw-release.png")
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		throwingImage, _, err := ebitenutil.NewImageFromReader(throwReleaseImage)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -82,7 +92,13 @@ func (p *Player) Draw(screen *ebiten.Image) {
 			p.Thrown = true
 			return
 		}
-		thrownImage, _, err := ebitenutil.NewImageFromFile("assets/player-throw-release.png")
+		throwReleaseImage, err := assets.Open("assets/player-throw-release.png")
+
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		thrownImage, _, err := ebitenutil.NewImageFromReader(throwReleaseImage)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -94,7 +110,13 @@ func (p *Player) Draw(screen *ebiten.Image) {
 	}
 	// Change Animation to throwing
 	if isPrepareThrow() {
-		preparingImage, _, err := ebitenutil.NewImageFromFile("assets/player-prepare-throw.png")
+		playerThrowImage, err := assets.Open("assets/player-prepare-throw.png")
+
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		preparingImage, _, err := ebitenutil.NewImageFromReader(playerThrowImage)
 		if err != nil {
 			log.Fatal(err)
 		}
