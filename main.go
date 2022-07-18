@@ -1,6 +1,7 @@
 package main
 
 import (
+	"embed"
 	_ "image/png"
 	"log"
 
@@ -20,6 +21,8 @@ var (
 	mplusBigFont    font.Face
 	mplusNormalFont font.Face
 	mplusSmallFont  font.Face
+	//go:embed assets/catch/*.json assets/*.png
+	assets embed.FS
 )
 
 func init() {
