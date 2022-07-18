@@ -6,6 +6,7 @@ import (
 	"log"
 
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/hajimehoshi/ebiten/v2/examples/resources/fonts"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"golang.org/x/image/font"
@@ -88,4 +89,19 @@ func main() {
 
 func isPrepareThrow() bool {
 	return inpututil.MouseButtonPressDuration(ebiten.MouseButtonLeft) != 0
+}
+
+func loadImage(name string) *ebiten.Image {
+	file, err := assets.Open(name)
+
+	if err != nil {
+		panic(err)
+	}
+	image, _, err := ebitenutil.NewImageFromReader(file)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return image
 }

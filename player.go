@@ -2,10 +2,8 @@ package main
 
 import (
 	"image"
-	"log"
 
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 )
 
@@ -44,18 +42,8 @@ type Player struct {
 }
 
 func NewPlayer() *Player {
-	playerFile, err := assets.Open("assets/player-stand.png")
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	playerImage, _, err := ebitenutil.NewImageFromReader(playerFile)
-	if err != nil {
-		log.Fatal(err)
-	}
-
 	return &Player{
-		Image:    playerImage,
+		Image:    loadImage("assets/player-stand.png"),
 		Strength: playerStrength(1),
 		Gold:     Gold(0),
 		Throwing: false,
@@ -70,16 +58,7 @@ func (p *Player) Draw(screen *ebiten.Image) {
 	p.Options.GeoM.Translate(float64(windowWidth/5), 0)
 
 	if p.Thrown {
-		throwReleaseImage, err := assets.Open("assets/player-throw-release.png")
-
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		throwingImage, _, err := ebitenutil.NewImageFromReader(throwReleaseImage)
-		if err != nil {
-			log.Fatal(err)
-		}
+		throwingImage := loadImage("assets/player-throw-release.png")
 
 		sx, sy := 560, 0
 
@@ -92,34 +71,17 @@ func (p *Player) Draw(screen *ebiten.Image) {
 			p.Thrown = true
 			return
 		}
-		throwReleaseImage, err := assets.Open("assets/player-throw-release.png")
 
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		thrownImage, _, err := ebitenutil.NewImageFromReader(throwReleaseImage)
-		if err != nil {
-			log.Fatal(err)
-		}
+		throwReleaseImage := loadImage("assets/player-throw-release.png")
 
 		sx, sy := 0+(p.count/playerStandAnimationSpeed)%5*playerThrownFrameWidth, 0
 
-		screen.DrawImage(thrownImage.SubImage(image.Rect(sx, sy, sx+playerThrownFrameWidth, sy+playerThrownAssetHeight)).(*ebiten.Image), p.Options)
+		screen.DrawImage(throwReleaseImage.SubImage(image.Rect(sx, sy, sx+playerThrownFrameWidth, sy+playerThrownAssetHeight)).(*ebiten.Image), p.Options)
 		return
 	}
 	// Change Animation to throwing
 	if isPrepareThrow() {
-		playerThrowImage, err := assets.Open("assets/player-prepare-throw.png")
-
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		preparingImage, _, err := ebitenutil.NewImageFromReader(playerThrowImage)
-		if err != nil {
-			log.Fatal(err)
-		}
+		preparingImage := loadImage("assets/player-prepare-throw.png")
 
 		sx, sy := 0+p.getAnimationSpeed()*playerPreparingFrameWidth, 0
 		screen.DrawImage(preparingImage.SubImage(image.Rect(sx, sy, sx+playerPreparingFrameWidth, sy+playerPreparingAssetHeight)).(*ebiten.Image), p.Options)

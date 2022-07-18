@@ -1,11 +1,9 @@
 package main
 
 import (
-	"log"
 	"math"
 
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 )
 
 type Magnet struct {
@@ -18,24 +16,13 @@ type Magnet struct {
 }
 
 func NewMagnet() *Magnet {
-	magnetFile, err := assets.Open("assets/magnet.png")
-
-	if err != nil {
-		panic(err)
-	}
-	magnetImage, _, err := ebitenutil.NewImageFromReader(magnetFile)
-
-	if err != nil {
-		log.Fatal(err)
-	}
-
 	op := &ebiten.DrawImageOptions{}
 	// Setup starting coordinates
 	op.GeoM.Translate(float64(windowWidth)/2, float64(windowHeight)/2)
 	op.GeoM.Translate(float64(windowWidth)/5, 0)
 
 	return &Magnet{
-		Image:         magnetImage,
+		Image:         loadImage("assets/magnet.png"),
 		Options:       op,
 		Thrown:        false,
 		ThrownSince:   0,
