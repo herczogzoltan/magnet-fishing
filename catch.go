@@ -2,7 +2,7 @@ package main
 
 import (
 	"encoding/json"
-	"io/ioutil"
+	"io"
 )
 
 var (
@@ -26,7 +26,7 @@ func loadCatchAsset() {
 	}
 
 	defer catchFile.Close()
-	catches, _ := ioutil.ReadAll(catchFile)
+	catches, _ := io.ReadAll(catchFile)
 
 	if err := json.Unmarshal(catches, &catchList); err != nil {
 		panic(err)
