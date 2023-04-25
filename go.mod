@@ -1,6 +1,6 @@
 module github.com/herczogzoltan/magnet-fishing
 
-go 1.18
+go 1.20
 
 require (
 	github.com/hajimehoshi/ebiten/v2 v2.3.4
