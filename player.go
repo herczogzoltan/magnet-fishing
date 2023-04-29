@@ -43,7 +43,7 @@ type Player struct {
 
 func NewPlayer() *Player {
 	return &Player{
-		Image:    loadImage("assets/player-stand.png"),
+		Image:    &ebiten.Image{},
 		Strength: playerStrength(1),
 		Gold:     Gold(0),
 		Throwing: false,

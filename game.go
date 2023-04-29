@@ -31,6 +31,7 @@ func NewGame(game *Game) {
 	textFloat = 36
 	game.Store = &Store{}
 	game.Player = NewPlayer()
+	game.Player.Image = loadImage("assets/player-stand.png")
 	game.Throw = &Throw{}
 	game.Magnet = NewMagnet()
 	game.Found = false
