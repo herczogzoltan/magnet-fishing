@@ -22,7 +22,7 @@ func NewMagnet() *Magnet {
 	op.GeoM.Translate(float64(windowWidth)/5, 0)
 
 	return &Magnet{
-		Image:         loadImage("assets/magnet.png"),
+		Image:         LoadImage("assets/magnet.png"),
 		Options:       op,
 		Thrown:        false,
 		ThrownSince:   0,

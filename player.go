@@ -58,7 +58,7 @@ func (p *Player) Draw(screen *ebiten.Image) {
 	p.Options.GeoM.Translate(float64(windowWidth/5), 0)
 
 	if p.Thrown {
-		throwingImage := loadImage("assets/player-throw-release.png")
+		throwingImage := LoadImage("assets/player-throw-release.png")
 
 		sx, sy := 560, 0
 
@@ -72,7 +72,7 @@ func (p *Player) Draw(screen *ebiten.Image) {
 			return
 		}
 
-		throwReleaseImage := loadImage("assets/player-throw-release.png")
+		throwReleaseImage := LoadImage("assets/player-throw-release.png")
 
 		sx, sy := 0+(p.count/playerStandAnimationSpeed)%5*playerThrownFrameWidth, 0
 
@@ -81,7 +81,7 @@ func (p *Player) Draw(screen *ebiten.Image) {
 	}
 	// Change Animation to throwing
 	if isPrepareThrow() {
-		preparingImage := loadImage("assets/player-prepare-throw.png")
+		preparingImage := LoadImage("assets/player-prepare-throw.png")
 
 		sx, sy := 0+p.getAnimationSpeed()*playerPreparingFrameWidth, 0
 		screen.DrawImage(preparingImage.SubImage(image.Rect(sx, sy, sx+playerPreparingFrameWidth, sy+playerPreparingAssetHeight)).(*ebiten.Image), p.Options)
