@@ -72,14 +72,7 @@ func setupEnvironment() {
 func main() {
 	setupEnvironment()
 
-	game := &Game{
-		Width:  windowWidth,
-		Height: windowHeight,
-		Player: nil,
-		Throw:  nil,
-	}
-
-	go NewGame(game)
+	game := NewGame(windowWidth, windowHeight)
 
 	if err := ebiten.RunGame(game); err != nil {
 		log.Fatal(err)

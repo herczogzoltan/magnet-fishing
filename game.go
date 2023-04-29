@@ -27,16 +27,22 @@ type Game struct {
 	GameStarted bool
 }
 
-func NewGame(game *Game) {
-	textFloat = 36
-	game.Store = &Store{}
-	game.Player = NewPlayer()
-	game.Player.Image = LoadImage("assets/player-stand.png")
-	game.Throw = &Throw{}
-	game.Magnet = NewMagnet()
-	game.Found = false
-	game.Catch = Catch{}
-	game.GameStarted = false
+func NewGame(windowWidth int, windowHeight int) *Game {
+	player := NewPlayer()
+	player.Image = LoadImage("assets/player-stand.png")
+
+	game := &Game{
+		Width:  windowWidth,
+		Height: windowHeight,
+		Store:  &Store{},
+		Player: player,
+		Throw:  &Throw{},
+		Magnet: NewMagnet(),
+		Found:  false,
+		Catch:  Catch{},
+	}
+
+	return game
 }
 
 func (g *Game) Update() error {
@@ -59,7 +65,7 @@ func (g *Game) Update() error {
 	return nil
 }
 
-var textFloat int
+var textFloat = 36
 
 func (g *Game) Draw(screen *ebiten.Image) {
 	screen.Fill(color.White)
