@@ -6,17 +6,13 @@ import (
 )
 
 var (
-	catchList Catches
+	catchList []Catch
 )
 
 type Catch struct {
 	Name        string `json:"Name"`
 	Description string `json:"Description"`
 	Gold        Gold   `json:"Gold"`
-}
-
-type Catches struct {
-	Catches []Catch `json:"catches"`
 }
 
 func loadCatchAsset() {

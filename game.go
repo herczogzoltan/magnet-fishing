@@ -57,7 +57,7 @@ func (g *Game) Update() error {
 
 	if g.Magnet.Found {
 		g.Found = true
-		g.Catch = catchList.Catches[rand.Intn(len(catchList.Catches))]
+		g.Catch = catchList[rand.Intn(len(catchList))]
 
 		g.reset()
 	}
