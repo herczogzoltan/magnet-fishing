@@ -35,10 +35,6 @@ func (t *Throw) setAccuracy(cd ClickDuration) {
 	t.Accuracy = ThrowAccuracy(100 - accuracy)
 }
 
-func (t *Throw) getAccuracy() ThrowAccuracy {
-	return t.Accuracy
-}
-
 func (t *Throw) calculateAccuracy(duration string) (int, error) {
 	dsLen := len(duration)
 
