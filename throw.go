@@ -13,7 +13,6 @@ type ClickDuration int
 type Throw struct {
 	Accuracy int
 	Power    int
-	Distance int
 }
 
 func (t *Throw) setAccuracy(cd ClickDuration) {
@@ -47,19 +46,17 @@ func (t *Throw) Update(g *Game) {
 
 	// Do not reset click duration when we have a value
 	if t.Accuracy != 0 && inpututil.MouseButtonPressDuration(ebiten.MouseButtonLeft) == 0 {
-		t.calculateDistance()
 		return
 	}
 
 	t.setAccuracy(ClickDuration(inpututil.MouseButtonPressDuration(ebiten.MouseButtonLeft)))
 }
 
-func (t *Throw) calculateDistance() {
-	t.Distance = t.Accuracy + t.Power
+func (t *Throw) Distance() int {
+	return t.Accuracy + t.Power
 }
 
 func (t *Throw) reset() {
 	t.Accuracy = 0
 	t.Power = 0
-	t.Distance = 0
 }
