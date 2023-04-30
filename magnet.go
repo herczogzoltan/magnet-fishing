@@ -14,17 +14,14 @@ type Magnet struct {
 }
 
 func NewMagnet() *Magnet {
-	op := &ebiten.DrawImageOptions{}
-	// Setup starting coordinates
-	op.GeoM.Translate(float64(windowWidth)/2, float64(windowHeight)/2)
-	op.GeoM.Translate(float64(windowWidth)/5, 0)
-
-	return &Magnet{
+	m := &Magnet{
 		Image:       LoadImage("assets/magnet.png"),
-		Options:     op,
 		flyDistance: 0,
 		flyDuration: 0,
 	}
+	m.toStartPosition()
+
+	return m
 }
 
 func (m *Magnet) Draw(screen *ebiten.Image) {
@@ -47,10 +44,7 @@ func (m *Magnet) Draw(screen *ebiten.Image) {
 }
 
 func (m *Magnet) Update(g *Game) {
-	// do not override it while throwing
-	if m.flyDistance != g.Player.ThrowDistance() {
-		m.flyDistance = g.Player.ThrowDistance()
-	}
+	m.flyDistance = g.Player.ThrowDistance()
 
 	if g.Player.Thrown {
 		m.flyDuration++
@@ -70,13 +64,16 @@ func (m *Magnet) calculateY() float64 {
 	return radius + math.Sqrt(math.Pow(radius, 2)-math.Pow(x-h, 2))
 }
 
-func (m *Magnet) reset() {
-	m.flyDuration = 0
-	m.flyDistance = 0
-
-	// Setup starting coordinates
+func (m *Magnet) toStartPosition() {
 	op := &ebiten.DrawImageOptions{}
 	op.GeoM.Translate(float64(windowWidth)/2, float64(windowHeight)/2)
 	op.GeoM.Translate(float64(windowWidth)/5, 0)
+
 	m.Options = op
+}
+
+func (m *Magnet) reset() {
+	m.flyDuration = 0
+	m.flyDistance = 0
+	m.toStartPosition()
 }
