@@ -7,12 +7,8 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 )
 
-var (
-	ThrowReleaseCycle = 100
-)
-
 const (
-	playerStandAnimationSpeed  = 14
+	playerDrawAnimationSpeed   = 14
 	playerFrameNum             = 4
 	playerStandAssetWidth      = 448
 	playerStandAssetHeight     = 118
@@ -26,78 +22,82 @@ const (
 	playerThrownFrameWidth     = playerThrownAssetWidth / playerThrownFrameNum
 )
 
-type playerStrength uint8
-
 type Gold uint64
 
 type Player struct {
-	Image       *ebiten.Image
-	Options     *ebiten.DrawImageOptions
-	Gold        Gold
-	Strength    playerStrength
-	count       int
-	Throwing    bool
-	Thrown      bool
-	ThrownSince int
+	StandingImage     *ebiten.Image
+	ThrowingImage     *ebiten.Image
+	RopeSpinningImage *ebiten.Image
+	Options           *ebiten.DrawImageOptions
+	Gold              Gold
+	Strength          int
+	count             int
+	Throwing          bool
+	ThrowAccuracy     int
 }
 
 func NewPlayer() *Player {
-	return &Player{
-		Image:    loadImage("assets/player-stand.png"),
-		Strength: playerStrength(1),
-		Gold:     Gold(0),
-		Throwing: false,
-		Thrown:   false,
+	p := &Player{
+		StandingImage: &ebiten.Image{},
+		Strength:      1,
+		Gold:          0,
+		Throwing:      false,
 	}
-}
 
-func (p *Player) Draw(screen *ebiten.Image) {
-	// Initialize position
+	p.StandingImage = LoadImage("assets/player-stand.png")
+	p.ThrowingImage = LoadImage("assets/player-throw-release.png")
+	p.RopeSpinningImage = LoadImage("assets/player-prepare-throw.png")
+
 	p.Options = &ebiten.DrawImageOptions{}
 	p.Options.GeoM.Translate(float64(windowWidth)/2, float64(windowHeight)/2)
 	p.Options.GeoM.Translate(float64(windowWidth/5), 0)
 
-	if p.Thrown {
-		throwingImage := loadImage("assets/player-throw-release.png")
+	return p
+}
 
-		sx, sy := 560, 0
-
-		screen.DrawImage(throwingImage.SubImage(image.Rect(sx, sy, sx+playerThrownFrameWidth, sy+playerThrownAssetHeight)).(*ebiten.Image), p.Options)
-		p.ThrownSince++
+func (p *Player) Draw(screen *ebiten.Image) {
+	if p.isThrowing() {
+		p.drawThrowing(screen)
 		return
 	}
+
+	p.drawStanding(screen)
+}
+
+func (p *Player) drawThrowing(screen *ebiten.Image) {
 	if p.Throwing {
-		if p.count/playerStandAnimationSpeed%5*playerThrownFrameWidth == 560 {
-			p.Thrown = true
-			return
-		}
+		sx := (p.count / playerDrawAnimationSpeed) % playerThrownFrameNum * playerThrownFrameWidth
 
-		throwReleaseImage := loadImage("assets/player-throw-release.png")
-
-		sx, sy := 0+(p.count/playerStandAnimationSpeed)%5*playerThrownFrameWidth, 0
-
-		screen.DrawImage(throwReleaseImage.SubImage(image.Rect(sx, sy, sx+playerThrownFrameWidth, sy+playerThrownAssetHeight)).(*ebiten.Image), p.Options)
-		return
-	}
-	// Change Animation to throwing
-	if isPrepareThrow() {
-		preparingImage := loadImage("assets/player-prepare-throw.png")
-
-		sx, sy := 0+p.getAnimationSpeed()*playerPreparingFrameWidth, 0
-		screen.DrawImage(preparingImage.SubImage(image.Rect(sx, sy, sx+playerPreparingFrameWidth, sy+playerPreparingAssetHeight)).(*ebiten.Image), p.Options)
+		screen.DrawImage(p.ThrowingImage.SubImage(image.Rect(sx, 0, sx+playerThrownFrameWidth, playerThrownAssetHeight)).(*ebiten.Image), p.Options)
 		return
 	}
 
-	sx, sy := 0+p.getAnimationSpeed()*playerStandFrameWidth, 0
-	screen.DrawImage(p.Image.SubImage(image.Rect(sx, sy, sx+playerStandFrameWidth, sy+playerStandAssetHeight)).(*ebiten.Image), p.Options)
+	if isRopeSpinning() {
+		sx := p.getAnimationSpeed() * playerPreparingFrameWidth
+		screen.DrawImage(p.RopeSpinningImage.SubImage(image.Rect(sx, 0, sx+playerPreparingFrameWidth, playerPreparingAssetHeight)).(*ebiten.Image), p.Options)
+		return
+	}
+}
+
+func (p *Player) drawStanding(screen *ebiten.Image) {
+	sx := p.getAnimationSpeed() * playerStandFrameWidth
+	screen.DrawImage(p.StandingImage.SubImage(image.Rect(sx, 0, sx+playerStandFrameWidth, playerStandAssetHeight)).(*ebiten.Image), p.Options)
+}
+
+func (p *Player) isThrowing() bool {
+	return p.Throwing || isRopeSpinning()
+}
+
+func (p *Player) IsThrowReleased() bool {
+	return p.Throwing && p.count/playerDrawAnimationSpeed%playerThrownFrameNum*playerThrownFrameWidth == 560
 }
 
 func (p *Player) getAnimationSpeed() int {
-	return (p.count / playerStandAnimationSpeed) % playerFrameNum
+	return (p.count / playerDrawAnimationSpeed) % playerFrameNum
 }
 
-func (p *Player) Update(g *Game) {
-	if g.isThrown() {
+func (p *Player) Update() {
+	if p.isThrown() {
 		p.Throwing = true
 	}
 
@@ -105,12 +105,39 @@ func (p *Player) Update(g *Game) {
 		p.count = 0
 	}
 
-	p.count++
+	if !p.IsThrowReleased() {
+		p.count++
+	}
+
+	// Do not reset click duration when we have a value
+	if p.ThrowAccuracy != 0 && inpututil.MouseButtonPressDuration(ebiten.MouseButtonLeft) == 0 {
+		return
+	}
+
+	p.setAccuracy(inpututil.MouseButtonPressDuration(ebiten.MouseButtonLeft))
+}
+
+func (p *Player) setAccuracy(clickDuration int) {
+	cd := clickDuration % 100
+
+	if cd <= 50 {
+		p.ThrowAccuracy = cd
+		return
+	}
+
+	p.ThrowAccuracy = 100 - cd
+}
+
+func (p *Player) ThrowDistance() int {
+	return p.ThrowAccuracy + p.Strength
+}
+
+func (p *Player) isThrown() bool {
+	return !isRopeSpinning() && p.ThrowAccuracy != 0
 }
 
 func (p *Player) reset() {
 	p.count = 0
 	p.Throwing = false
-	p.Thrown = false
-	p.ThrownSince = 0
+	p.ThrowAccuracy = 0
 }

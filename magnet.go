@@ -7,96 +7,73 @@ import (
 )
 
 type Magnet struct {
-	Image         *ebiten.Image
-	Options       *ebiten.DrawImageOptions
-	Thrown        bool
-	ThrownSince   int
-	ThrowDistance Distance
-	Found         bool
+	Image       *ebiten.Image
+	Options     *ebiten.DrawImageOptions
+	flyDuration int
+	flyDistance int
 }
 
 func NewMagnet() *Magnet {
-	op := &ebiten.DrawImageOptions{}
-	// Setup starting coordinates
-	op.GeoM.Translate(float64(windowWidth)/2, float64(windowHeight)/2)
-	op.GeoM.Translate(float64(windowWidth)/5, 0)
-
-	return &Magnet{
-		Image:         loadImage("assets/magnet.png"),
-		Options:       op,
-		Thrown:        false,
-		ThrownSince:   0,
-		ThrowDistance: 0,
-		Found:         false,
+	m := &Magnet{
+		Image:       LoadImage("assets/magnet.png"),
+		flyDistance: 0,
+		flyDuration: 0,
 	}
+	m.toStartPosition()
+
+	return m
 }
 
 func (m *Magnet) Draw(screen *ebiten.Image) {
+	diff := float64(m.flyDistance / 5)
+	if diff >= 4 {
+		diff = 4
+	}
+	ty := m.calculateY() + diff/5
+	tx := 2 + diff
 
-	if m.Thrown {
-		diff := float64(m.ThrowDistance / 5)
-		if diff >= 4 {
-			diff = 4
-		}
-		ty := m.calculateY() + diff/5
-		tx := 2 + diff
-
-		if m.ThrownSince >= int(m.ThrowDistance*130) {
-			m.Options.GeoM.Translate(-float64(tx), +ty*float64((m.ThrownSince/10)))
-		} else if m.ThrownSince >= int(m.ThrowDistance*100) && m.ThrownSince <= int(m.ThrowDistance*130) {
-			m.Options.GeoM.Translate(-float64(tx), 0)
-		} else {
-			m.Options.GeoM.Translate(-float64(tx), -ty+float64(m.ThrownSince/4))
-		}
-
-		screen.DrawImage(m.Image, m.Options)
-		return
+	if m.flyDuration >= m.flyDistance*130 {
+		m.Options.GeoM.Translate(-float64(tx), +ty*float64((m.flyDuration/10)))
+	} else if m.flyDuration >= m.flyDistance*100 && m.flyDuration <= m.flyDistance*130 {
+		m.Options.GeoM.Translate(-float64(tx), 0)
+	} else {
+		m.Options.GeoM.Translate(-float64(tx), -ty+float64(m.flyDuration/4))
 	}
 
+	screen.DrawImage(m.Image, m.Options)
 }
 
-func (m *Magnet) Update(g *Game) {
-	if g.Player.Thrown {
-		m.Thrown = true
+func (m *Magnet) Update(p *Player) {
+	m.flyDistance = p.ThrowDistance()
+
+	if p.IsThrowReleased() {
+		m.flyDuration++
 	}
+}
 
-	// do not override it while throwing
-	if m.ThrowDistance == Distance(0) && g.Throw.Distance != Distance(0) {
-		m.ThrowDistance = g.Throw.Distance
-	}
-
-	if m.Thrown {
-		m.ThrownSince++
-
-		// Found when hit ocean floor
-		if m.Options.GeoM.Element(1, 2) >= OceanFloor {
-			m.Found = true
-		}
-	}
-
-	if m.Found {
-
-		m.Thrown = false
-	}
+func (m *Magnet) Found() bool {
+	return m.Options.GeoM.Element(1, 2) >= OceanFloor
 }
 
 func (m *Magnet) calculateY() float64 {
 	x := m.Options.GeoM.Element(0, 2)
-	diameter := int(m.ThrowDistance)
+	diameter := m.flyDistance
 	radius := float64(diameter / 2)
 	h := x - radius
 
 	return radius + math.Sqrt(math.Pow(radius, 2)-math.Pow(x-h, 2))
 }
 
-func (m *Magnet) reset() {
-	m.Found = false
-	m.ThrownSince = 0
-	m.ThrowDistance = 0
-
-	// Setup starting coordinates
+func (m *Magnet) toStartPosition() {
 	op := &ebiten.DrawImageOptions{}
 	op.GeoM.Translate(float64(windowWidth)/2, float64(windowHeight)/2)
 	op.GeoM.Translate(float64(windowWidth)/5, 0)
+
 	m.Options = op
+}
+
+func (m *Magnet) reset() {
+	m.flyDuration = 0
+	m.flyDistance = 0
+	m.toStartPosition()
 }
