@@ -62,30 +62,30 @@ func (p *Player) drawThrowing(screen *ebiten.Image) {
 	throwReleaseImage := LoadImage("assets/player-throw-release.png")
 
 	if p.IsThrowReleased() {
-		sx, sy := 560, 0
+		sx := 560
 
-		screen.DrawImage(throwReleaseImage.SubImage(image.Rect(sx, sy, sx+playerThrownFrameWidth, sy+playerThrownAssetHeight)).(*ebiten.Image), p.Options)
+		screen.DrawImage(throwReleaseImage.SubImage(image.Rect(sx, 0, sx+playerThrownFrameWidth, playerThrownAssetHeight)).(*ebiten.Image), p.Options)
 		return
 	}
 	if p.Throwing {
-		sx, sy := 0+(p.count/playerStandAnimationSpeed)%5*playerThrownFrameWidth, 0
+		sx := 0 + (p.count/playerStandAnimationSpeed)%5*playerThrownFrameWidth
 
-		screen.DrawImage(throwReleaseImage.SubImage(image.Rect(sx, sy, sx+playerThrownFrameWidth, sy+playerThrownAssetHeight)).(*ebiten.Image), p.Options)
+		screen.DrawImage(throwReleaseImage.SubImage(image.Rect(sx, 0, sx+playerThrownFrameWidth, playerThrownAssetHeight)).(*ebiten.Image), p.Options)
 		return
 	}
 
 	if isRopeSpinning() {
 		preparingImage := LoadImage("assets/player-prepare-throw.png")
 
-		sx, sy := 0+p.getAnimationSpeed()*playerPreparingFrameWidth, 0
-		screen.DrawImage(preparingImage.SubImage(image.Rect(sx, sy, sx+playerPreparingFrameWidth, sy+playerPreparingAssetHeight)).(*ebiten.Image), p.Options)
+		sx := 0 + p.getAnimationSpeed()*playerPreparingFrameWidth
+		screen.DrawImage(preparingImage.SubImage(image.Rect(sx, 0, sx+playerPreparingFrameWidth, playerPreparingAssetHeight)).(*ebiten.Image), p.Options)
 		return
 	}
 }
 
 func (p *Player) drawStanding(screen *ebiten.Image) {
-	sx, sy := 0+p.getAnimationSpeed()*playerStandFrameWidth, 0
-	screen.DrawImage(p.Image.SubImage(image.Rect(sx, sy, sx+playerStandFrameWidth, sy+playerStandAssetHeight)).(*ebiten.Image), p.Options)
+	sx := 0 + p.getAnimationSpeed()*playerStandFrameWidth
+	screen.DrawImage(p.Image.SubImage(image.Rect(sx, 0, sx+playerStandFrameWidth, playerStandAssetHeight)).(*ebiten.Image), p.Options)
 }
 
 func (p *Player) isThrowing() bool {
