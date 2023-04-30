@@ -61,12 +61,6 @@ func (p *Player) Draw(screen *ebiten.Image) {
 func (p *Player) drawThrowing(screen *ebiten.Image) {
 	throwReleaseImage := LoadImage("assets/player-throw-release.png")
 
-	if p.IsThrowReleased() {
-		sx := 560
-
-		screen.DrawImage(throwReleaseImage.SubImage(image.Rect(sx, 0, sx+playerThrownFrameWidth, playerThrownAssetHeight)).(*ebiten.Image), p.Options)
-		return
-	}
 	if p.Throwing {
 		sx := (p.count / playerDrawAnimationSpeed) % playerThrownFrameNum * playerThrownFrameWidth
 
@@ -89,7 +83,7 @@ func (p *Player) drawStanding(screen *ebiten.Image) {
 }
 
 func (p *Player) isThrowing() bool {
-	return p.IsThrowReleased() || p.Throwing || isRopeSpinning()
+	return p.Throwing || isRopeSpinning()
 }
 
 func (p *Player) IsThrowReleased() bool {
