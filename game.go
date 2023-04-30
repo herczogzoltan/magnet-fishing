@@ -1,8 +1,11 @@
 package main
 
 import (
+	"embed"
+	"encoding/json"
 	"fmt"
 	"image/color"
+	"io"
 	"math/rand"
 	"strconv"
 
@@ -15,6 +18,16 @@ const (
 	OceanFloor = 800
 )
 
+var (
+	catchList []Catch
+)
+
+type Catch struct {
+	Name        string `json:"Name"`
+	Description string `json:"Description"`
+	Gold        Gold   `json:"Gold"`
+}
+
 type Game struct {
 	Width       int
 	Height      int
@@ -25,11 +38,14 @@ type Game struct {
 	Found       bool
 	Catch       Catch
 	GameStarted bool
+	Assets      *embed.FS
 }
 
-func NewGame(windowWidth int, windowHeight int) *Game {
+func NewGame(windowWidth int, windowHeight int, assets *embed.FS) *Game {
 	player := NewPlayer()
 	player.Image = LoadImage("assets/player-stand.png")
+
+	loadCatchAsset(assets)
 
 	game := &Game{
 		Width:  windowWidth,
@@ -40,9 +56,24 @@ func NewGame(windowWidth int, windowHeight int) *Game {
 		Magnet: NewMagnet(),
 		Found:  false,
 		Catch:  Catch{},
+		Assets: assets,
 	}
 
 	return game
+}
+
+func loadCatchAsset(assets *embed.FS) {
+	catchFile, err := assets.Open("assets/catch/catch.json")
+	if err != nil {
+		panic(err)
+	}
+
+	defer catchFile.Close()
+	catches, _ := io.ReadAll(catchFile)
+
+	if err := json.Unmarshal(catches, &catchList); err != nil {
+		panic(err)
+	}
 }
 
 func (g *Game) Update() error {

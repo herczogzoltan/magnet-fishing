@@ -60,7 +60,6 @@ func init() {
 		log.Fatal(err)
 	}
 
-	loadCatchAsset()
 }
 
 func setupEnvironment() {
@@ -72,7 +71,7 @@ func setupEnvironment() {
 func main() {
 	setupEnvironment()
 
-	game := NewGame(windowWidth, windowHeight)
+	game := NewGame(windowWidth, windowHeight, &assets)
 
 	if err := ebiten.RunGame(game); err != nil {
 		log.Fatal(err)
