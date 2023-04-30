@@ -7,7 +7,6 @@ import (
 	"image/color"
 	"io"
 	"math/rand"
-	"strconv"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
@@ -101,8 +100,8 @@ func (g *Game) Draw(screen *ebiten.Image) {
 		g.Magnet.Draw(screen)
 	}
 
-	text.Draw(screen, "Gold:"+strconv.Itoa(int(g.Player.Gold) + int(g.Catch.Gold)), mplusNormalFont, g.Width-270, 30, color.Black)
-	text.Draw(screen, "Throwing Accuracy:"+strconv.Itoa(int(g.Player.ThrowAccuracy)), mplusNormalFont, g.Width-270, 60, color.Black)
+	text.Draw(screen, fmt.Sprintf("Gold: %v", g.Player.Gold+g.Catch.Gold), mplusNormalFont, g.Width-270, 30, color.Black)
+	text.Draw(screen, fmt.Sprintf("Throwing Accuracy: %v", g.Player.ThrowAccuracy), mplusNormalFont, g.Width-270, 60, color.Black)
 
 	if !g.GameStarted {
 		g.displayTutorial(screen)
