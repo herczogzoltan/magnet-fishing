@@ -79,7 +79,7 @@ func (g *Game) Update() error {
 	g.Magnet.Update(g)
 	g.Store.Listen(g.Player)
 
-	if isPrepareThrow() {
+	if isRopeSpinning() {
 		g.GameStarted = true
 	}
 
@@ -141,7 +141,7 @@ func (g *Game) Layout(outsideWidth, outsideHeight int) (windowWidth, windowHeigh
 }
 
 func (g *Game) isThrown() bool {
-	return !isPrepareThrow() && g.Player.ThrowAccuracy != 0
+	return !isRopeSpinning() && g.Player.ThrowAccuracy != 0
 }
 
 func (g *Game) reset() {

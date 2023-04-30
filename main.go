@@ -32,6 +32,6 @@ func main() {
 	}
 }
 
-func isPrepareThrow() bool {
+func isRopeSpinning() bool {
 	return inpututil.MouseButtonPressDuration(ebiten.MouseButtonLeft) != 0
 }

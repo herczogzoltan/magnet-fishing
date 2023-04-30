@@ -76,7 +76,7 @@ func (p *Player) Draw(screen *ebiten.Image) {
 		return
 	}
 	// Change Animation to throwing
-	if isPrepareThrow() {
+	if isRopeSpinning() {
 		preparingImage := LoadImage("assets/player-prepare-throw.png")
 
 		sx, sy := 0+p.getAnimationSpeed()*playerPreparingFrameWidth, 0
