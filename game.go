@@ -107,18 +107,11 @@ func (g *Game) Draw(screen *ebiten.Image) {
 	text.Draw(screen, "Throwing Accuracy:"+strconv.Itoa(int(g.Throw.Accuracy)), mplusNormalFont, g.Width-270, 60, color.Black)
 
 	if !g.GameStarted {
-		text.Draw(screen, fmt.Sprintln("1. Click and hold your epic left mouse button to catch"), mplusNormalFont, g.Width/4, g.Height/3-90, color.Black)
-		text.Draw(screen, fmt.Sprintln("2. Check the epic stuff you found"), mplusNormalFont, g.Width/4, g.Height/3-60, color.Black)
-		text.Draw(screen, fmt.Sprintln("3. Spend your epic gold on epic stuff"), mplusNormalFont, g.Width/4, g.Height/3-30, color.Black)
-		text.Draw(screen, fmt.Sprintln("4. Click and hold epicly to catch again"), mplusNormalFont, g.Width/4, g.Height/3, color.Black)
+		g.displayTutorial(screen)
 	}
 
 	if g.Found {
-		text.Draw(screen, fmt.Sprintf("+%d Gold!", g.Catch.Gold), mplusBigFont, g.Width/2, g.Height/3-(66-textFloat), color.Black)
-		text.Draw(screen, fmt.Sprintf("I found %s !", g.Catch.Name), mplusNormalFont, g.Width/2, g.Height/3-(36-textFloat), color.Black)
-
-		text.Draw(screen, g.Catch.Description, mplusSmallFont, g.Width/2, g.Height/3-(6-textFloat), color.Black)
-
+		g.displayCatchMessage(screen)
 		if inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft) {
 			g.Player.Gold += g.Catch.Gold
 			g.Found = false
@@ -128,6 +121,20 @@ func (g *Game) Draw(screen *ebiten.Image) {
 			textFloat -= 1
 		}
 	}
+}
+
+func (g *Game) displayTutorial(screen *ebiten.Image) {
+	text.Draw(screen, fmt.Sprintln("1. Click and hold your epic left mouse button to catch"), mplusNormalFont, g.Width/4, g.Height/3-90, color.Black)
+	text.Draw(screen, fmt.Sprintln("2. Check the epic stuff you found"), mplusNormalFont, g.Width/4, g.Height/3-60, color.Black)
+	text.Draw(screen, fmt.Sprintln("3. Spend your epic gold on epic stuff"), mplusNormalFont, g.Width/4, g.Height/3-30, color.Black)
+	text.Draw(screen, fmt.Sprintln("4. Click and hold epicly to catch again"), mplusNormalFont, g.Width/4, g.Height/3, color.Black)
+}
+
+func (g *Game) displayCatchMessage(screen *ebiten.Image) {
+	text.Draw(screen, fmt.Sprintf("+%d Gold!", g.Catch.Gold), mplusBigFont, g.Width/2, g.Height/3-(66-textFloat), color.Black)
+	text.Draw(screen, fmt.Sprintf("I found %s !", g.Catch.Name), mplusNormalFont, g.Width/2, g.Height/3-(36-textFloat), color.Black)
+
+	text.Draw(screen, g.Catch.Description, mplusSmallFont, g.Width/2, g.Height/3-(6-textFloat), color.Black)
 }
 
 func (g *Game) Layout(outsideWidth, outsideHeight int) (windowWidth, windowHeight int) {
