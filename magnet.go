@@ -10,7 +10,7 @@ type Magnet struct {
 	Image         *ebiten.Image
 	Options       *ebiten.DrawImageOptions
 	Thrown        bool
-	ThrownSince   int
+	flyDuration   int
 	ThrowDistance int
 }
 
@@ -24,8 +24,8 @@ func NewMagnet() *Magnet {
 		Image:         LoadImage("assets/magnet.png"),
 		Options:       op,
 		Thrown:        false,
-		ThrownSince:   0,
 		ThrowDistance: 0,
+		flyDuration:   0,
 	}
 }
 
@@ -39,12 +39,12 @@ func (m *Magnet) Draw(screen *ebiten.Image) {
 		ty := m.calculateY() + diff/5
 		tx := 2 + diff
 
-		if m.ThrownSince >= m.ThrowDistance*130 {
-			m.Options.GeoM.Translate(-float64(tx), +ty*float64((m.ThrownSince/10)))
-		} else if m.ThrownSince >= m.ThrowDistance*100 && m.ThrownSince <= m.ThrowDistance*130 {
+		if m.flyDuration >= m.ThrowDistance*130 {
+			m.Options.GeoM.Translate(-float64(tx), +ty*float64((m.flyDuration/10)))
+		} else if m.flyDuration >= m.ThrowDistance*100 && m.flyDuration <= m.ThrowDistance*130 {
 			m.Options.GeoM.Translate(-float64(tx), 0)
 		} else {
-			m.Options.GeoM.Translate(-float64(tx), -ty+float64(m.ThrownSince/4))
+			m.Options.GeoM.Translate(-float64(tx), -ty+float64(m.flyDuration/4))
 		}
 
 		screen.DrawImage(m.Image, m.Options)
@@ -64,7 +64,7 @@ func (m *Magnet) Update(g *Game) {
 	}
 
 	if m.Thrown {
-		m.ThrownSince++
+		m.flyDuration++
 	}
 }
 
@@ -82,7 +82,7 @@ func (m *Magnet) calculateY() float64 {
 }
 
 func (m *Magnet) reset() {
-	m.ThrownSince = 0
+	m.flyDuration = 0
 	m.ThrowDistance = 0
 	m.Thrown = false
 
