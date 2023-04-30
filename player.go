@@ -40,21 +40,23 @@ type Player struct {
 }
 
 func NewPlayer() *Player {
-	return &Player{
+	p := &Player{
 		Image:    &ebiten.Image{},
 		Strength: 1,
 		Gold:     0,
 		Throwing: false,
 		Thrown:   false,
 	}
-}
 
-func (p *Player) Draw(screen *ebiten.Image) {
 	// Initialize position
 	p.Options = &ebiten.DrawImageOptions{}
 	p.Options.GeoM.Translate(float64(windowWidth)/2, float64(windowHeight)/2)
 	p.Options.GeoM.Translate(float64(windowWidth/5), 0)
 
+	return p
+}
+
+func (p *Player) Draw(screen *ebiten.Image) {
 	throwReleaseImage := LoadImage("assets/player-throw-release.png")
 
 	if p.Thrown {
