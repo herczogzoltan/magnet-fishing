@@ -48,7 +48,6 @@ func NewPlayer() *Player {
 		Thrown:   false,
 	}
 
-	// Initialize position
 	p.Options = &ebiten.DrawImageOptions{}
 	p.Options.GeoM.Translate(float64(windowWidth)/2, float64(windowHeight)/2)
 	p.Options.GeoM.Translate(float64(windowWidth/5), 0)
