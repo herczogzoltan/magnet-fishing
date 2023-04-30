@@ -54,6 +54,15 @@ func NewPlayer() *Player {
 }
 
 func (p *Player) Draw(screen *ebiten.Image) {
+	if p.isThrowing() {
+		p.drawThrowing(screen)
+		return
+	}
+
+	p.drawStanding(screen)
+}
+
+func (p *Player) drawThrowing(screen *ebiten.Image) {
 	throwReleaseImage := LoadImage("assets/player-throw-release.png")
 
 	if p.IsThrowReleased() {
@@ -68,7 +77,7 @@ func (p *Player) Draw(screen *ebiten.Image) {
 		screen.DrawImage(throwReleaseImage.SubImage(image.Rect(sx, sy, sx+playerThrownFrameWidth, sy+playerThrownAssetHeight)).(*ebiten.Image), p.Options)
 		return
 	}
-	// Change Animation to throwing
+
 	if isRopeSpinning() {
 		preparingImage := LoadImage("assets/player-prepare-throw.png")
 
@@ -76,9 +85,15 @@ func (p *Player) Draw(screen *ebiten.Image) {
 		screen.DrawImage(preparingImage.SubImage(image.Rect(sx, sy, sx+playerPreparingFrameWidth, sy+playerPreparingAssetHeight)).(*ebiten.Image), p.Options)
 		return
 	}
+}
 
+func (p *Player) drawStanding(screen *ebiten.Image) {
 	sx, sy := 0+p.getAnimationSpeed()*playerStandFrameWidth, 0
 	screen.DrawImage(p.Image.SubImage(image.Rect(sx, sy, sx+playerStandFrameWidth, sy+playerStandAssetHeight)).(*ebiten.Image), p.Options)
+}
+
+func (p *Player) isThrowing() bool {
+	return p.IsThrowReleased() || p.Throwing || isRopeSpinning()
 }
 
 func (p *Player) IsThrowReleased() bool {
