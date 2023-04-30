@@ -42,7 +42,6 @@ type Game struct {
 
 func NewGame(windowWidth int, windowHeight int, assets *embed.FS) *Game {
 	player := NewPlayer()
-	player.Image = LoadImage("assets/player-stand.png")
 
 	loadCatchAsset(assets)
 
@@ -75,8 +74,8 @@ func loadCatchAsset(assets *embed.FS) {
 }
 
 func (g *Game) Update() error {
-	g.Player.Update(g)
-	g.Magnet.Update(g)
+	g.Player.Update()
+	g.Magnet.Update(g.Player)
 	g.Store.Listen(g.Player)
 
 	if isRopeSpinning() {
@@ -102,7 +101,7 @@ func (g *Game) Draw(screen *ebiten.Image) {
 		g.Magnet.Draw(screen)
 	}
 
-	text.Draw(screen, "Gold:"+strconv.Itoa(int(g.Player.Gold)), mplusNormalFont, g.Width-270, 30, color.Black)
+	text.Draw(screen, "Gold:"+strconv.Itoa(int(g.Player.Gold) + int(g.Catch.Gold)), mplusNormalFont, g.Width-270, 30, color.Black)
 	text.Draw(screen, "Throwing Accuracy:"+strconv.Itoa(int(g.Player.ThrowAccuracy)), mplusNormalFont, g.Width-270, 60, color.Black)
 
 	if !g.GameStarted {
@@ -138,10 +137,6 @@ func (g *Game) displayCatchMessage(screen *ebiten.Image) {
 
 func (g *Game) Layout(outsideWidth, outsideHeight int) (windowWidth, windowHeight int) {
 	return g.Width, g.Height
-}
-
-func (g *Game) isThrown() bool {
-	return !isRopeSpinning() && g.Player.ThrowAccuracy != 0
 }
 
 func isRopeSpinning() bool {
