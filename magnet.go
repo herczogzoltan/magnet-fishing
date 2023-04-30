@@ -46,7 +46,7 @@ func (m *Magnet) Draw(screen *ebiten.Image) {
 func (m *Magnet) Update(g *Game) {
 	m.flyDistance = g.Player.ThrowDistance()
 
-	if g.Player.Thrown {
+	if g.Player.IsThrowReleased() {
 		m.flyDuration++
 	}
 }

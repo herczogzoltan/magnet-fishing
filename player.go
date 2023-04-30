@@ -35,7 +35,6 @@ type Player struct {
 	Strength      int
 	count         int
 	Throwing      bool
-	Thrown        bool
 	ThrowAccuracy int
 }
 
@@ -45,7 +44,6 @@ func NewPlayer() *Player {
 		Strength: 1,
 		Gold:     0,
 		Throwing: false,
-		Thrown:   false,
 	}
 
 	p.Options = &ebiten.DrawImageOptions{}
@@ -58,18 +56,13 @@ func NewPlayer() *Player {
 func (p *Player) Draw(screen *ebiten.Image) {
 	throwReleaseImage := LoadImage("assets/player-throw-release.png")
 
-	if p.Thrown {
+	if p.IsThrowReleased() {
 		sx, sy := 560, 0
 
 		screen.DrawImage(throwReleaseImage.SubImage(image.Rect(sx, sy, sx+playerThrownFrameWidth, sy+playerThrownAssetHeight)).(*ebiten.Image), p.Options)
 		return
 	}
 	if p.Throwing {
-		if p.count/playerStandAnimationSpeed%5*playerThrownFrameWidth == 560 {
-			p.Thrown = true
-			return
-		}
-
 		sx, sy := 0+(p.count/playerStandAnimationSpeed)%5*playerThrownFrameWidth, 0
 
 		screen.DrawImage(throwReleaseImage.SubImage(image.Rect(sx, sy, sx+playerThrownFrameWidth, sy+playerThrownAssetHeight)).(*ebiten.Image), p.Options)
@@ -88,6 +81,10 @@ func (p *Player) Draw(screen *ebiten.Image) {
 	screen.DrawImage(p.Image.SubImage(image.Rect(sx, sy, sx+playerStandFrameWidth, sy+playerStandAssetHeight)).(*ebiten.Image), p.Options)
 }
 
+func (p *Player) IsThrowReleased() bool {
+	return p.Throwing && p.count/playerStandAnimationSpeed%5*playerThrownFrameWidth == 560
+}
+
 func (p *Player) getAnimationSpeed() int {
 	return (p.count / playerStandAnimationSpeed) % playerFrameNum
 }
@@ -101,7 +98,9 @@ func (p *Player) Update(g *Game) {
 		p.count = 0
 	}
 
-	p.count++
+	if !p.IsThrowReleased() {
+		p.count++
+	}
 
 	// Do not reset click duration when we have a value
 	if p.ThrowAccuracy != 0 && inpututil.MouseButtonPressDuration(ebiten.MouseButtonLeft) == 0 {
@@ -129,6 +128,5 @@ func (p *Player) ThrowDistance() int {
 func (p *Player) reset() {
 	p.count = 0
 	p.Throwing = false
-	p.Thrown = false
 	p.ThrowAccuracy = 0
 }

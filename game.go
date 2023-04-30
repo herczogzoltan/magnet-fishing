@@ -98,7 +98,7 @@ var textFloat = 36
 func (g *Game) Draw(screen *ebiten.Image) {
 	screen.Fill(color.White)
 	g.Player.Draw(screen)
-	if g.Player.Thrown {
+	if g.Player.IsThrowReleased() {
 		g.Magnet.Draw(screen)
 	}
 
@@ -142,6 +142,10 @@ func (g *Game) Layout(outsideWidth, outsideHeight int) (windowWidth, windowHeigh
 
 func (g *Game) isThrown() bool {
 	return !isRopeSpinning() && g.Player.ThrowAccuracy != 0
+}
+
+func isRopeSpinning() bool {
+	return inpututil.MouseButtonPressDuration(ebiten.MouseButtonLeft) != 0
 }
 
 func (g *Game) reset() {
