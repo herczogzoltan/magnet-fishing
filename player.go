@@ -36,7 +36,6 @@ type Player struct {
 	count         int
 	Throwing      bool
 	Thrown        bool
-	ThrownSince   int
 	ThrowAccuracy int
 }
 
@@ -62,7 +61,6 @@ func (p *Player) Draw(screen *ebiten.Image) {
 		sx, sy := 560, 0
 
 		screen.DrawImage(throwReleaseImage.SubImage(image.Rect(sx, sy, sx+playerThrownFrameWidth, sy+playerThrownAssetHeight)).(*ebiten.Image), p.Options)
-		p.ThrownSince++
 		return
 	}
 	if p.Throwing {
@@ -131,6 +129,5 @@ func (p *Player) reset() {
 	p.count = 0
 	p.Throwing = false
 	p.Thrown = false
-	p.ThrownSince = 0
 	p.ThrowAccuracy = 0
 }
