@@ -42,12 +42,8 @@ func (t *Throw) calculateAccuracy(duration string) (int, error) {
 	return strconv.Atoi(duration)
 }
 
-func (t *Throw) setPower(s int) {
-	t.Power = s
-}
-
 func (t *Throw) Update(g *Game) {
-	t.setPower(g.Player.Strength)
+	t.Power = g.Player.Strength
 
 	// Do not reset click duration when we have a value
 	if t.Accuracy != 0 && inpututil.MouseButtonPressDuration(ebiten.MouseButtonLeft) == 0 {
