@@ -8,15 +8,12 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 )
 
-type ThrowPower uint8
-type ThrowAccuracy uint8
 type ClickDuration int
-type Distance int
 
 type Throw struct {
-	Accuracy ThrowAccuracy
-	Power    ThrowPower
-	Distance Distance
+	Accuracy int
+	Power    int
+	Distance int
 }
 
 func (t *Throw) setAccuracy(cd ClickDuration) {
@@ -28,11 +25,11 @@ func (t *Throw) setAccuracy(cd ClickDuration) {
 	}
 
 	if accuracy <= 50 {
-		t.Accuracy = ThrowAccuracy(accuracy)
+		t.Accuracy = accuracy
 		return
 	}
 
-	t.Accuracy = ThrowAccuracy(100 - accuracy)
+	t.Accuracy = 100 - accuracy
 }
 
 func (t *Throw) calculateAccuracy(duration string) (int, error) {
@@ -45,8 +42,8 @@ func (t *Throw) calculateAccuracy(duration string) (int, error) {
 	return strconv.Atoi(duration)
 }
 
-func (t *Throw) setPower(s playerStrength) {
-	t.Power = ThrowPower(s)
+func (t *Throw) setPower(s int) {
+	t.Power = s
 }
 
 func (t *Throw) Update(g *Game) {
@@ -62,7 +59,7 @@ func (t *Throw) Update(g *Game) {
 }
 
 func (t *Throw) calculateDistance() {
-	t.Distance = Distance(t.Accuracy + ThrowAccuracy(t.Power))
+	t.Distance = t.Accuracy + t.Power
 }
 
 func (t *Throw) reset() {

@@ -11,7 +11,7 @@ type Magnet struct {
 	Options       *ebiten.DrawImageOptions
 	Thrown        bool
 	ThrownSince   int
-	ThrowDistance Distance
+	ThrowDistance int
 	Found         bool
 }
 
@@ -41,9 +41,9 @@ func (m *Magnet) Draw(screen *ebiten.Image) {
 		ty := m.calculateY() + diff/5
 		tx := 2 + diff
 
-		if m.ThrownSince >= int(m.ThrowDistance*130) {
+		if m.ThrownSince >= m.ThrowDistance*130 {
 			m.Options.GeoM.Translate(-float64(tx), +ty*float64((m.ThrownSince/10)))
-		} else if m.ThrownSince >= int(m.ThrowDistance*100) && m.ThrownSince <= int(m.ThrowDistance*130) {
+		} else if m.ThrownSince >= m.ThrowDistance*100 && m.ThrownSince <= m.ThrowDistance*130 {
 			m.Options.GeoM.Translate(-float64(tx), 0)
 		} else {
 			m.Options.GeoM.Translate(-float64(tx), -ty+float64(m.ThrownSince/4))
@@ -61,7 +61,7 @@ func (m *Magnet) Update(g *Game) {
 	}
 
 	// do not override it while throwing
-	if m.ThrowDistance == Distance(0) && g.Throw.Distance != Distance(0) {
+	if m.ThrowDistance == 0 && g.Throw.Distance != 0 {
 		m.ThrowDistance = g.Throw.Distance
 	}
 
@@ -82,7 +82,7 @@ func (m *Magnet) Update(g *Game) {
 
 func (m *Magnet) calculateY() float64 {
 	x := m.Options.GeoM.Element(0, 2)
-	diameter := int(m.ThrowDistance)
+	diameter := m.ThrowDistance
 	radius := float64(diameter / 2)
 	h := x - radius
 

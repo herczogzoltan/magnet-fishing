@@ -26,15 +26,13 @@ const (
 	playerThrownFrameWidth     = playerThrownAssetWidth / playerThrownFrameNum
 )
 
-type playerStrength uint8
-
 type Gold uint64
 
 type Player struct {
 	Image       *ebiten.Image
 	Options     *ebiten.DrawImageOptions
 	Gold        Gold
-	Strength    playerStrength
+	Strength    int
 	count       int
 	Throwing    bool
 	Thrown      bool
@@ -44,7 +42,7 @@ type Player struct {
 func NewPlayer() *Player {
 	return &Player{
 		Image:    &ebiten.Image{},
-		Strength: playerStrength(1),
+		Strength: 1,
 		Gold:     Gold(0),
 		Throwing: false,
 		Thrown:   false,
