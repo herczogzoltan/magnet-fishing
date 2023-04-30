@@ -43,7 +43,7 @@ func NewPlayer() *Player {
 	return &Player{
 		Image:    &ebiten.Image{},
 		Strength: 1,
-		Gold:     Gold(0),
+		Gold:     0,
 		Throwing: false,
 		Thrown:   false,
 	}
