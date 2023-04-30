@@ -7,10 +7,6 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 )
 
-var (
-	ThrowReleaseCycle = 100
-)
-
 const (
 	playerStandAnimationSpeed  = 14
 	playerFrameNum             = 4
