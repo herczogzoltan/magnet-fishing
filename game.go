@@ -33,7 +33,6 @@ type Game struct {
 	Height      int
 	Store       *Store
 	Player      *Player
-	Throw       *Throw
 	Magnet      *Magnet
 	Found       bool
 	Catch       Catch
@@ -52,7 +51,6 @@ func NewGame(windowWidth int, windowHeight int, assets *embed.FS) *Game {
 		Height: windowHeight,
 		Store:  &Store{},
 		Player: player,
-		Throw:  &Throw{},
 		Magnet: NewMagnet(),
 		Found:  false,
 		Catch:  Catch{},
@@ -78,7 +76,6 @@ func loadCatchAsset(assets *embed.FS) {
 
 func (g *Game) Update() error {
 	g.Player.Update(g)
-	g.Throw.Update(g)
 	g.Magnet.Update(g)
 	g.Store.Listen(g.Player)
 
@@ -104,7 +101,7 @@ func (g *Game) Draw(screen *ebiten.Image) {
 	g.Magnet.Draw(screen)
 
 	text.Draw(screen, "Gold:"+strconv.Itoa(int(g.Player.Gold)), mplusNormalFont, g.Width-270, 30, color.Black)
-	text.Draw(screen, "Throwing Accuracy:"+strconv.Itoa(int(g.Throw.Accuracy)), mplusNormalFont, g.Width-270, 60, color.Black)
+	text.Draw(screen, "Throwing Accuracy:"+strconv.Itoa(int(g.Player.ThrowAccuracy)), mplusNormalFont, g.Width-270, 60, color.Black)
 
 	if !g.GameStarted {
 		g.displayTutorial(screen)
@@ -142,12 +139,11 @@ func (g *Game) Layout(outsideWidth, outsideHeight int) (windowWidth, windowHeigh
 }
 
 func (g *Game) isThrown() bool {
-	return !isPrepareThrow() && g.Throw.Accuracy != 0
+	return !isPrepareThrow() && g.Player.ThrowAccuracy != 0
 }
 
 func (g *Game) reset() {
 	g.Player.reset()
-	g.Throw.reset()
 	g.Magnet.reset()
 	textFloat = 36
 }

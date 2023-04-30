@@ -59,8 +59,8 @@ func (m *Magnet) Update(g *Game) {
 	}
 
 	// do not override it while throwing
-	if m.ThrowDistance != g.Throw.Distance() {
-		m.ThrowDistance = g.Throw.Distance()
+	if m.ThrowDistance != g.Player.ThrowDistance() {
+		m.ThrowDistance = g.Player.ThrowDistance()
 	}
 
 	if m.Thrown {

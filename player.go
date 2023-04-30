@@ -29,14 +29,15 @@ const (
 type Gold uint64
 
 type Player struct {
-	Image       *ebiten.Image
-	Options     *ebiten.DrawImageOptions
-	Gold        Gold
-	Strength    int
-	count       int
-	Throwing    bool
-	Thrown      bool
-	ThrownSince int
+	Image         *ebiten.Image
+	Options       *ebiten.DrawImageOptions
+	Gold          Gold
+	Strength      int
+	count         int
+	Throwing      bool
+	Thrown        bool
+	ThrownSince   int
+	ThrowAccuracy int
 }
 
 func NewPlayer() *Player {
@@ -104,6 +105,28 @@ func (p *Player) Update(g *Game) {
 	}
 
 	p.count++
+
+	// Do not reset click duration when we have a value
+	if p.ThrowAccuracy != 0 && inpututil.MouseButtonPressDuration(ebiten.MouseButtonLeft) == 0 {
+		return
+	}
+
+	p.setAccuracy(inpututil.MouseButtonPressDuration(ebiten.MouseButtonLeft))
+}
+
+func (p *Player) setAccuracy(clickDuration int) {
+	cd := clickDuration % 100
+
+	if cd <= 50 {
+		p.ThrowAccuracy = cd
+		return
+	}
+
+	p.ThrowAccuracy = 100 - cd
+}
+
+func (p *Player) ThrowDistance() int {
+	return p.ThrowAccuracy + p.Strength
 }
 
 func (p *Player) reset() {
@@ -111,4 +134,5 @@ func (p *Player) reset() {
 	p.Throwing = false
 	p.Thrown = false
 	p.ThrownSince = 0
+	p.ThrowAccuracy = 0
 }
