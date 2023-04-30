@@ -12,7 +12,6 @@ type Magnet struct {
 	Thrown        bool
 	ThrownSince   int
 	ThrowDistance int
-	Found         bool
 }
 
 func NewMagnet() *Magnet {
@@ -27,7 +26,6 @@ func NewMagnet() *Magnet {
 		Thrown:        false,
 		ThrownSince:   0,
 		ThrowDistance: 0,
-		Found:         false,
 	}
 }
 
@@ -67,17 +65,11 @@ func (m *Magnet) Update(g *Game) {
 
 	if m.Thrown {
 		m.ThrownSince++
-
-		// Found when hit ocean floor
-		if m.Options.GeoM.Element(1, 2) >= OceanFloor {
-			m.Found = true
-		}
 	}
+}
 
-	if m.Found {
-
-		m.Thrown = false
-	}
+func (m *Magnet) Found() bool {
+	return m.Thrown && m.Options.GeoM.Element(1, 2) >= OceanFloor
 }
 
 func (m *Magnet) calculateY() float64 {
@@ -90,9 +82,9 @@ func (m *Magnet) calculateY() float64 {
 }
 
 func (m *Magnet) reset() {
-	m.Found = false
 	m.ThrownSince = 0
 	m.ThrowDistance = 0
+	m.Thrown = false
 
 	// Setup starting coordinates
 	op := &ebiten.DrawImageOptions{}
