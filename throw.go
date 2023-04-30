@@ -1,9 +1,6 @@
 package main
 
 import (
-	"log"
-	"strconv"
-
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 )
@@ -15,30 +12,15 @@ type Throw struct {
 	Power    int
 }
 
-func (t *Throw) setAccuracy(cd ClickDuration) {
-	durationString := strconv.Itoa(int(cd))
-	accuracy, err := t.calculateAccuracy(durationString)
+func (t *Throw) setAccuracy(clickDuration int) {
+	cd := clickDuration % 100
 
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	if accuracy <= 50 {
-		t.Accuracy = accuracy
+	if cd <= 50 {
+		t.Accuracy = cd
 		return
 	}
 
-	t.Accuracy = 100 - accuracy
-}
-
-func (t *Throw) calculateAccuracy(duration string) (int, error) {
-	dsLen := len(duration)
-
-	if dsLen >= 2 {
-		return strconv.Atoi(duration[dsLen-2:])
-	}
-
-	return strconv.Atoi(duration)
+	t.Accuracy = 100 - cd
 }
 
 func (t *Throw) Update(g *Game) {
@@ -49,7 +31,7 @@ func (t *Throw) Update(g *Game) {
 		return
 	}
 
-	t.setAccuracy(ClickDuration(inpututil.MouseButtonPressDuration(ebiten.MouseButtonLeft)))
+	t.setAccuracy(inpututil.MouseButtonPressDuration(ebiten.MouseButtonLeft))
 }
 
 func (t *Throw) Distance() int {
