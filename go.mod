@@ -3,7 +3,7 @@ module github.com/herczogzoltan/magnet-fishing
 go 1.20
 
 require (
-	github.com/hajimehoshi/ebiten/v2 v2.5.3
+	github.com/hajimehoshi/ebiten/v2 v2.5.4
 	golang.org/x/image v0.7.0
 )
 
